@@ -1,12 +1,30 @@
-const express =require("express");
-const dotenv=require("dotenv")
+const express = require("express");
+const dotenv = require("dotenv")
+const roomroute = require("./routes/roomroute.js")
+const cors = require('cors');
+
 dotenv.config({
-  path:'./.env',
+  path: './.env',
 })
+
+const dbconfig = require('./db')
+
 const app = express();
 
-const dbconfig=require('./db')
-const port = process.env.PORT || 5000;
+// CORS Configuration
+const corsOptions = {
+  origin: 'http://localhost:5173', // Your frontend URL
+  credentials: true, // This is important.
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+
+const port = process.env.PORT || 4000; // Changed to 4000 to match the frontend request
+
+app.use('/api/rooms', roomroute);
+
 app.listen(port, () => {
   console.log(`Server running on port :${port}`);
 });
