@@ -13,7 +13,7 @@ const app = express();
 
 // CORS Configuration
 const corsOptions = {
-  origin: 'http://localhost:5173', // Your frontend URL
+  origin: 'http://localhost:5173', // our frontend URL
   credentials: true, // This is important.
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -21,7 +21,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const port = process.env.PORT || 4000; // Changed to 4000 to match the frontend request
+const port = process.env.PORT || 4000; 
 
 app.use('/api/rooms', roomroute);
 
