@@ -3,12 +3,22 @@
   padding: 0;
   font-family:Arial, Helvetica, sans-serif;
 }
+body{
+  background-color: #efefef;
+}
 .navnav{
   background: linear-gradient(to right, #aaeaf4, #66dfee, #80deea);
   height: 11vh;
 }
+.title{
+  margin-right: 72vw;
+  font-size: 35px;
+  font-weight: 900;
+  font-family:'Times New Roman', Times, serif;
+}
 .abc{
   color: rgb(0, 0, 0);
+  font-size: 23px;
   font-weight: 600;
 }
 .abc:hover{
@@ -20,10 +30,21 @@
   padding-bottom: 0;
   margin-bottom: 0;
 }
-.mrgn{
-  margin-right:68vw;
-  margin-left: 25px;
-}
+
 .l{
   margin-right: 1vw;
+}
+.smallimg{
+  width: 350px;
+  height: 265px;
+  border-radius: 5px !important;
+}
+.content{
+  margin-left: 60px;
+}
+.imgbox{
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 5px;
+  margin-top: 20px;
+  padding: 20px;
 }
