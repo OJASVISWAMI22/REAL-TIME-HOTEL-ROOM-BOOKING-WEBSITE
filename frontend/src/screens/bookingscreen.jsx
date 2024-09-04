@@ -35,7 +35,7 @@ const BookingScreen = () => {
           <div className="row mt-5 book left">
             <div className="col-md-5">
               <h3>{room.name}</h3>
-              <img src={room.imageurls[0]} className="bigimg" style={{marginTop:'30px'}}/>
+              <img src={room.imageurls[0]} className="bigimg iii" style={{marginTop:'30px'}}/>
             </div>
             <div className="col-md-5 right">
               <div style={{textAlign:'right'}}>
