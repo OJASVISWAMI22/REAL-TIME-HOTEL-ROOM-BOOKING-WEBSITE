@@ -10,7 +10,6 @@ const Homescreen = () => {
       try {
         setloading(true);
         const data = (await axios.get("/api/rooms/getallrooms")).data;
-        console.log(data);
         setrooms(data.rooms);
         setloading(false);
       } catch (error) {
@@ -30,9 +29,11 @@ const Homescreen = () => {
           <h1>error...</h1>
         ) : (
           rooms.map((room) => {
-            return <div className="col-md-9 mt-4">
-              <Room room={room}/>
-            </div>;
+            return (
+              <div className="col-md-9 mt-4" key={room.name}>
+                <Room room={room} />
+              </div>
+            );
           })
         )}
       </div>
