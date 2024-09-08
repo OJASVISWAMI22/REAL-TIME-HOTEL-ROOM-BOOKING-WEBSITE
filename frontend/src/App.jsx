@@ -3,6 +3,7 @@ import Navbar from "./components/navbar";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Homescreen from "./screens/homescreen";
 import BookingScreen from "./screens/bookingscreen";
+import Error from "./components/Error";
 function App() {
   return (
     <>

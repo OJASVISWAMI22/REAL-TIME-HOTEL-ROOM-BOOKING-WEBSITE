@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Loader from "../components/Loader";
+import Error from "../components/Error";
 const BookingScreen = () => {
   const { roomid } = useParams();
   const [loading, setloading] = useState(true);
@@ -26,11 +28,7 @@ const BookingScreen = () => {
 
   return (
     <div className="imgbox bs">
-      {loading ? (
-        <h1>loading...</h1>
-      ) : error ? (
-        <h1>error...</h1>
-      ) :room ? (
+      {loading ? (<Loader/>) :room ? (
         <div>
           <div className="row mt-5 book left">
             <div className="col-md-5">
@@ -63,10 +61,10 @@ const BookingScreen = () => {
             </div>
           </div>
         </div>
-      ): (
-      <h1>No room data found.</h1>  // Display a message if room data is missing
-    )}
-     </div>
+      ):error ? (
+         <Error/>
+    ):(<h1>Nothing to show</h1>)
+       }</div>
   )
 };
 export default BookingScreen;
