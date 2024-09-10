@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const roomroute = require("./routes/roomroute.js");
+const userroute=require('./routes/userroute.js')
 const cors = require("cors");
 
 dotenv.config({
@@ -25,6 +26,7 @@ const port = process.env.PORT || 4000;
 app.use(express.json());
 app.use("/api/rooms", roomroute);
 
+app.use("/api/user",userroute)
 app.listen(port, () => {
   console.log(`Server running on port :${port}`);
 });

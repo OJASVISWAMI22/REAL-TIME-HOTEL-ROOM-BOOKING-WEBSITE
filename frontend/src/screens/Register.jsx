@@ -1,13 +1,20 @@
 import { useState } from "react";
-
+import axios from 'axios';
+import Error from '../components/Error.jsx'
+import Loader from '../components/Loader.jsx'
+import Success from '../components/Success.jsx'
 const Register = () => {
+
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [cp, setcp] = useState("");
 
-  const register = () => {
-    if(name==" " || email==" " || password==" " || cp==" "){
+  const [loading, setloading] = useState(false);
+  const [error, seterror] = useState();
+  const [success,setsuccess]=useState();
+  const register = async() => {
+    if(name=="" || email=="" || password=="" || cp==""){
       alert("Please enter user details first")
     }
     else if (password == cp ) {
@@ -17,14 +24,31 @@ const Register = () => {
         password,
         cp,
       };
-      console.log(user);
+      try {
+        setloading(true);
+        const result=(await axios.post('/api/user/register',user)).data;
+        setloading(false);
+        setsuccess(true)
+        setname('')
+        setemail('')
+        setpassword('')
+        setcp('')
+      } catch (error) {
+        setloading(false)
+        console.log(error)
+        seterror(true)
+      }
     } else {
       alert("Unmatched Password !!");
     }
   };
   return (
-    <div className="row justify-content-center mt-5 imgbox1">
+    <div>
+      {loading && (<Loader/>)}
+      {error && (<Error></Error>)}
+      <div className="row justify-content-center mt-5 imgbox1">
       <div className="col-md-5 mt-5">
+      {success && (<Success message={"Registration Successful"}></Success>)}
         <div>
           <center><h1>Register</h1></center>
           <input
@@ -68,6 +92,7 @@ const Register = () => {
           Register
         </button></center>
       </div>
+    </div>
     </div>
   );
 };
