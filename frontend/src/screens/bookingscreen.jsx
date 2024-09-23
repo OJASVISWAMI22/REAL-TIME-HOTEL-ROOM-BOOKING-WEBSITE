@@ -3,8 +3,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
+import moment from "moment";
 const BookingScreen = () => {
-  const { roomid } = useParams();
+  const { roomid ,fromdate,todate} = useParams();
+  const fromMoment = moment(fromdate, 'DD-MM-YYYY');
+  const toMoment = moment(todate, 'DD-MM-YYYY');
+  const duration = moment.duration(toMoment.diff(fromMoment));
+  const totalDays = duration.asDays();
+  const totaldays=totalDays+1;
   const [loading, setloading] = useState(true);
   const [error, seterror] = useState();
   const [room, setroom] = useState();
@@ -41,8 +47,8 @@ const BookingScreen = () => {
               <hr className="hrtag"></hr>
               <b>
               <p>Name : </p>
-              <p>From Date :</p>
-              <p>To Date :</p>
+              <p>From Date : {fromdate}</p>
+              <p>To Date : {todate}</p>
               <p>Max Count : {room.maxcount}</p>
               </b>
               </div>
@@ -50,9 +56,9 @@ const BookingScreen = () => {
                 <h4 style={{fontWeight:'600'}}>Billing</h4>
                 <hr className="hrtag" />
                 <b>
-                  <p>Total Days : </p>
-                  <p>Rent Per Day :{room.rentperday}</p>
-                  <p>Total Amount :</p>
+                  <p>Total Days : {totaldays}</p>
+                  <p>Rent Per Day : {room.rentperday}</p>
+                  <p>Total Amount : {room.rentperday*totaldays}</p>
                 </b>
               </div>
               <div style={{float:'right'}}>

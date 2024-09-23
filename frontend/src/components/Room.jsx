@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Modal, Button, Carousel } from "react-bootstrap";
 import { Link } from "react-router-dom";
-const Room = ({ room }) => {
+const Room = ({ room ,fromdate,todate}) => {
   const [show, setShow] = useState(false);
-
+ 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
@@ -19,7 +19,7 @@ const Room = ({ room }) => {
           <p>Rent Per Day :{room.rentperday}</p>
         </b>
         <div style={{ float: "right" }}>
-          <Link to={`/book/${room._id}`}>
+          <Link to={`/book/${room._id}/${fromdate}/${todate}`}>
             <Button className="btn btn-dark btn">Book Now</Button>
           </Link>
           <button className="btn btn-dark btn" onClick={handleShow}>

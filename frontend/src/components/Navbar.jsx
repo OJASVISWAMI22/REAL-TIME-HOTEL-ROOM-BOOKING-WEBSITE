@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Navbar = () => {
-  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const logout=()=>{
-    localStorage.removeItem(user);
-    window.location.href='/login'
-  }
+  const logout = () => {
+    localStorage.removeItem("currentUser");
+    setUser(null);
+    window.location.href = '/login';
+  };
+
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary navnav">
       <div className="container-fluid">
@@ -38,7 +40,7 @@ const Navbar = () => {
                   aria-labelledby="dropdownMenuButton"
                 >
                   <a className="dropdown-item" href="#">
-                    Bookings
+                    Profile
                   </a>
                   <a className="dropdown-item" href="#" onClick={logout}>
                     Logout
@@ -63,4 +65,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
