@@ -59,7 +59,7 @@ const Homescreen = () => {
             );
           })
         ) : (
-          <Error />
+          <Error message={"Something Went Wrong"}/>
         )}
       </div>
     </div>
