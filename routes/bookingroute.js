@@ -26,6 +26,7 @@ router.post("/bookroom", async (req, res) => {
       userid:userid,
       status:booking.status,
     })
+    await temproom.save()
     res.status(200).json({ message: 'Room booked successfully', booking });
   } catch (error) {
     console.error("Booking error:", error);

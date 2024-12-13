@@ -11,14 +11,16 @@ const Homescreen = () => {
   const [rooms, setrooms] = useState([]);
   const [loading, setloading] = useState();
   const [error, seterror] = useState();
-  const [fromdate,setfromdate]=useState();
-  const [todate,settodate]=useState();
+  const [fromdate, setfromdate] = useState();
+  const [todate, settodate] = useState();
+  const [duplicateroom, setduplicateroom] = useState([]);
   useEffect(() => {
     const getroom = async () => {
       try {
         setloading(true);
         const data = (await axios.get("/api/rooms/getallrooms")).data;
         setrooms(data.rooms);
+        setduplicateroom(data.rooms);
         setloading(false);
       } catch (error) {
         seterror(true);
@@ -28,18 +30,51 @@ const Homescreen = () => {
     };
     getroom();
   }, []);
+
   const filterbydate = (dates, dateStrings) => {
-    if (dates) {
-      // console.log('Formatted Selected Time: ', dateStrings);
-      // console.log('Start Date:', dateStrings[0]);
-      // console.log('End Date:', dateStrings[1]);
+
+      setfromdate(dates[0].format("DD-MM-YYYY"));
+      settodate(dates[1].format("DD-MM-YYYY"));
+    
+    var temproom = [];
+    for (const room of duplicateroom) {
+      var available = false;
+      if (room.currentbooking.length > 0) {
+        for (const booking of room.currentbooking) {
+          if (
+            !moment(
+              moment(dates[0].format("DD-MM-YYYY")).isBetween(
+                booking.fromdate,
+                booking.todate
+              )
+            ) &&
+            !moment(
+              moment(dates[1].format("DD-MM-YYYY")).isBetween(
+                booking.fromdate,
+                booking.todate
+              )
+            )
+          ) {
+            if (
+              moment(dates[0].format("DD-MM-YYYY")) !== booking.fromdate &&
+              moment(dates[0].format("DD-MM-YYYY")) !== booking.todate &&
+              moment(dates[1].format("DD-MM-YYYY")) !== booking.fromdate &&
+              moment(dates[1].format("DD-MM-YYYY")) !== booking.todate
+            ) {
+              available = true;
+            }
+          }
+        }
+      }
+      if (available == true || room.currentbooking.length == 0) {
+        temproom.push(room);
+      }
+      setrooms(temproom);
+    }
       
-      // console.log('Moment Start Date:', dates[0].format('DD-MM-YYYY'));
-      // console.log('Moment End Date:', dates[1].format('DD-MM-YYYY'));
-      setfromdate(dates[0].format('DD-MM-YYYY'))
-      settodate(dates[1].format('DD-MM-YYYY'))
-    } 
   };
+
+  
   return (
     <div className="container">
       <div className="row mt-5">
@@ -59,7 +94,7 @@ const Homescreen = () => {
             );
           })
         ) : (
-          <Error message={"Something Went Wrong"}/>
+          <Error message={"Something Went Wrong"} />
         )}
       </div>
     </div>
