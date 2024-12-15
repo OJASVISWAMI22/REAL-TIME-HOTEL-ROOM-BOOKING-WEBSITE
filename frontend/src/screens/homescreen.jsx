@@ -7,6 +7,7 @@ import Loader from "../components/Loader";
 import Error from "../components/Error";
 import moment from "moment";
 const { RangePicker } = DatePicker;
+
 const Homescreen = () => {
   const [rooms, setrooms] = useState([]);
   const [loading, setloading] = useState();
@@ -14,6 +15,7 @@ const Homescreen = () => {
   const [fromdate, setfromdate] = useState();
   const [todate, settodate] = useState();
   const [duplicateroom, setduplicateroom] = useState([]);
+
   useEffect(() => {
     const getroom = async () => {
       try {
@@ -31,49 +33,54 @@ const Homescreen = () => {
     getroom();
   }, []);
 
-  const filterbydate = (dates, dateStrings) => {
+  const filterbydate = (dates) => {
+    // Check if dates are valid and convert to moment objects if they aren't
+    if (!dates || dates.length !== 2) {
+      setrooms(duplicateroom);
+      return;
+    }
 
-      setfromdate(dates[0].format("DD-MM-YYYY"));
-      settodate(dates[1].format("DD-MM-YYYY"));
+    // Ensure we're working with moment objects
+    const startDate = moment(dates[0]);
+    const endDate = moment(dates[1]);
+
+    // Set fromdate and todate using moment's format method
+    setfromdate(startDate.format("DD-MM-YYYY"));
+    settodate(endDate.format("DD-MM-YYYY"));
     
     var temproom = [];
     for (const room of duplicateroom) {
       var available = false;
       if (room.currentbooking.length > 0) {
         for (const booking of room.currentbooking) {
-          if (
-            !moment(
-              moment(dates[0].format("DD-MM-YYYY")).isBetween(
-                booking.fromdate,
-                booking.todate
-              )
-            ) &&
-            !moment(
-              moment(dates[1].format("DD-MM-YYYY")).isBetween(
-                booking.fromdate,
-                booking.todate
-              )
-            )
-          ) {
-            if (
-              moment(dates[0].format("DD-MM-YYYY")) !== booking.fromdate &&
-              moment(dates[0].format("DD-MM-YYYY")) !== booking.todate &&
-              moment(dates[1].format("DD-MM-YYYY")) !== booking.fromdate &&
-              moment(dates[1].format("DD-MM-YYYY")) !== booking.todate
-            ) {
-              available = true;
-            }
+          // Parse booking dates as moment objects
+          const bookingFromDate = moment(booking.fromdate, "DD-MM-YYYY");
+          const bookingToDate = moment(booking.todate, "DD-MM-YYYY");
+
+          // Check if the selected dates overlap with existing bookings
+          const isOverlapping = 
+            startDate.isBetween(bookingFromDate, bookingToDate, null, '[]') ||
+            endDate.isBetween(bookingFromDate, bookingToDate, null, '[]') ||
+            bookingFromDate.isBetween(startDate, endDate, null, '[]');
+
+          if (!isOverlapping) {
+            available = true;
+          } else {
+            available = false;
+            break;
           }
         }
+      } else {
+        available = true;
       }
-      if (available == true || room.currentbooking.length == 0) {
+
+      if (available) {
         temproom.push(room);
       }
-      setrooms(temproom);
     }
-      
+    
+    setrooms(temproom);
   };
-
   
   return (
     <div className="container">
@@ -85,7 +92,7 @@ const Homescreen = () => {
       <div className="row justify-content-center mt-5">
         {loading ? (
           <Loader />
-        ) : rooms.length > 1 ? (
+        ) : rooms.length > 0 ? (
           rooms.map((room) => {
             return (
               <div className="col-md-9 mt-4" key={room.name}>
@@ -94,7 +101,7 @@ const Homescreen = () => {
             );
           })
         ) : (
-          <Error message={"Something Went Wrong"} />
+          <Error message={"No Rooms Available"} />
         )}
       </div>
     </div>

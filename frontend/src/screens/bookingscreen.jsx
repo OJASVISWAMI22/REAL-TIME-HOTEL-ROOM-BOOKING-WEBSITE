@@ -33,17 +33,33 @@ const BookingScreen = () => {
     getRoomById();
   }, [roomid]);
 
+  // useEffect(() => {
+  //   if (room) {
+  //     const fromMoment = moment(fromdate, 'DD-MM-YYYY');
+  //     const toMoment = moment(todate, 'DD-MM-YYYY');
+  //     const duration = moment.duration(toMoment.diff(fromMoment));
+  //     const days = duration.asDays() + 1;
+  //     setTotalDays(days);
+  //     setTotalAmount(room.rentperday * days);
+  //   }
+  // }, [room, fromdate, todate]);
   useEffect(() => {
     if (room) {
-      const fromMoment = moment(fromdate, 'DD-MM-YYYY');
-      const toMoment = moment(todate, 'DD-MM-YYYY');
+      const fromMoment = moment(fromdate, 'DD-MM-YYYY', true);
+      const toMoment = moment(todate, 'DD-MM-YYYY', true);
+      
+      // Add error handling for invalid dates
+      if (!fromMoment.isValid() || !toMoment.isValid()) {
+        console.error('Invalid date format');
+        return;
+      }
+  
       const duration = moment.duration(toMoment.diff(fromMoment));
       const days = duration.asDays() + 1;
       setTotalDays(days);
       setTotalAmount(room.rentperday * days);
     }
   }, [room, fromdate, todate]);
-
   const bookRoom = async () => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser) {
