@@ -5,8 +5,8 @@ import moment from "moment";
 import { useRazorpay } from "react-razorpay";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
-const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID;
-// Import environment variables using create-react-app's method
+
+const RAZORPAY_KEY_ID = "rzp_test_mIb4yljUBLSy6R";
 
 const BookingScreen = () => {
   const { roomid, fromdate, todate } = useParams();
@@ -15,6 +15,7 @@ const BookingScreen = () => {
   const [room, setRoom] = useState(null);
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalDays, setTotalDays] = useState(0);
+  const [bookingInProgress, setBookingInProgress] = useState(false);
   const navigate = useNavigate();
   const { Razorpay } = useRazorpay();
 
@@ -26,6 +27,7 @@ const BookingScreen = () => {
         setRoom(data.room);
         setLoading(false);
       } catch (error) {
+        console.error("Error fetching room:", error);
         setError(true);
         setLoading(false);
       }
@@ -33,115 +35,148 @@ const BookingScreen = () => {
     getRoomById();
   }, [roomid]);
 
-  // useEffect(() => {
-  //   if (room) {
-  //     const fromMoment = moment(fromdate, 'DD-MM-YYYY');
-  //     const toMoment = moment(todate, 'DD-MM-YYYY');
-  //     const duration = moment.duration(toMoment.diff(fromMoment));
-  //     const days = duration.asDays() + 1;
-  //     setTotalDays(days);
-  //     setTotalAmount(room.rentperday * days);
-  //   }
-  // }, [room, fromdate, todate]);
   useEffect(() => {
     if (room) {
-      const fromMoment = moment(fromdate, 'DD-MM-YYYY', true);
-      const toMoment = moment(todate, 'DD-MM-YYYY', true);
+      const from = moment(fromdate, 'DD-MM-YYYY');
+      const to = moment(todate, 'DD-MM-YYYY');
       
-      // Add error handling for invalid dates
-      if (!fromMoment.isValid() || !toMoment.isValid()) {
+      if (!from.isValid() || !to.isValid()) {
         console.error('Invalid date format');
         return;
       }
   
-      const duration = moment.duration(toMoment.diff(fromMoment));
-      const days = duration.asDays() + 1;
+      const days = to.diff(from, 'days') + 1;
       setTotalDays(days);
       setTotalAmount(room.rentperday * days);
     }
   }, [room, fromdate, todate]);
-  const bookRoom = async () => {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (!currentUser) {
-      alert("Please log in to book a room");
-      return;
-    }
-  
-    // Create a detailed booking details object
-    const bookingDetails = {
-      room: {
-        name: room.name,
-        roomId: room._id,
-        rentPerDay: room.rentperday,
-        maxCount: room.maxcount
-      },
-      user: {
-        id: currentUser._id,
-        name: currentUser.name,
-        email: currentUser.email
-      },
-      bookingDates: {
-        fromDate: fromdate,
-        toDate: todate
-      },
-      billing: {
-        totalDays: totalDays,
-        totalAmount: totalAmount,
-        amountInPaise: totalAmount * 100
-      },
-      bookingTimestamp: new Date().toISOString()
-    };
-  
-    // Log the booking details to console
-    console.log("Booking Details:", JSON.stringify(bookingDetails, null, 2));
-  
-    // Validate Razorpay key
-    if (!RAZORPAY_KEY_ID) {
-      alert("Razorpay key is not configured. Please contact support.");
-      return;
-    }
 
-    // Initiate Razorpay payment
-    const paymentOptions = {
-      key: RAZORPAY_KEY_ID, // Use the environment variable
-      amount: totalAmount * 100, // Convert to paise
-      currency: "INR",
-      name: "Hotel Booking",
-      description: `Booking for ${room.name}`,
-      handler: async (response) => {
-        try {
-          // Log payment response to console
-          console.log("Payment Response:", response);
+  // const handlePaymentSuccess = async (response) => {
+  //   try {
+  //     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      
+  //     const bookingDetails = {
+  //       room: room._id,  // Send room ID instead of name
+  //       user: currentUser._id,
+  //       fromDate: moment(fromdate, 'DD-MM-YYYY').format('YYYY-MM-DD'), // Change date format
+  //       toDate: moment(todate, 'DD-MM-YYYY').format('YYYY-MM-DD'),     // Change date format
+  //       totalAmount: totalAmount,
+  //       totalDays: totalDays,
+  //       paymentId: response.razorpay_payment_id
+  //     };
 
-          // Optional: Send booking and payment details to backend
-          await axios.post('/api/bookings/bookroom', {
-            ...bookingDetails,
-            paymentId: response.razorpay_payment_id
-          });
+  //     const result = await axios.post('/api/bookings/bookroom', bookingDetails);
+      
+  //     if (result.data.status === 'success') {
+  //       alert('Booking successful!');
+  //       navigate('/bookings');
+  //     } else {
+  //       throw new Error(result.data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Booking error:', error);
+  //     alert(error.response?.data?.message || 'Booking failed. Please try again.');
+  //   } finally {
+  //     setBookingInProgress(false);
+  //   }
+  // };
 
-          alert("Payment Successful!");
-          navigate('/bookings');
-        } catch (error) {
-          console.error("Error finalizing booking:", error);
-          alert("Booking processed, but there was an issue confirming with the server.");
-        }
-      },
-      prefill: {
-        name: currentUser.name,
-        email: currentUser.email,
-        contact: currentUser.phone
-      },
-      theme: {
-        color: "#F37254"
-      }
-    };
-  
+  const handlePaymentSuccess = async (response) => {
     try {
-      const razorpayInstance = new Razorpay(paymentOptions);
-      razorpayInstance.open();
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  
+      const bookingDetails = {
+        room: room._id,
+        user: currentUser._id,
+        fromDate: moment(fromdate, 'DD-MM-YYYY').format('YYYY-MM-DD'),
+        toDate: moment(todate, 'DD-MM-YYYY').format('YYYY-MM-DD'),
+        totalAmount,
+        totalDays,
+        paymentId: response.razorpay_payment_id
+      };
+  
+      // Add detailed request logging
+      console.log('Sending booking details:', JSON.stringify(bookingDetails, null, 2));
+  
+      const result = await axios.post('/api/bookings/bookroom', bookingDetails);
+      
+      if (result.data.status === 'success') {
+        alert('Booking successful!');
+        navigate('/bookings');
+      } else {
+        throw new Error(result.data.message);
+      }
     } catch (error) {
-      console.error("Razorpay initialization error:", error);
-      alert("There was an issue with the payment gateway. Please try again.");
+      // Add detailed error logging
+      console.error('Booking error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      
+      // Show more specific error message
+      alert(error.response?.data?.message || error.message || 'Booking failed. Please try again.');
+    } finally {
+      setBookingInProgress(false);
+    }
+  };
+  const bookRoom = async () => {
+    try {
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) {
+        alert("Please log in to book a room");
+        return;
+      }
+
+      // Validate dates
+      const from = moment(fromdate, 'DD-MM-YYYY');
+      const to = moment(todate, 'DD-MM-YYYY');
+      
+      if (!from.isValid() || !to.isValid()) {
+        alert('Invalid booking dates');
+        return;
+      }
+
+      if (from.isAfter(to)) {
+        alert('Check-out date must be after check-in date');
+        return;
+      }
+
+      if (from.isBefore(moment().startOf('day'))) {
+        alert('Cannot book dates in the past');
+        return;
+      }
+
+      setBookingInProgress(true);
+
+      const options = {
+        key: RAZORPAY_KEY_ID,
+        amount: totalAmount * 100, // Convert to paise
+        currency: "INR",
+        name: "Room Booking",
+        description: `${room.name} (${totalDays} days)`,
+        handler: handlePaymentSuccess,
+        prefill: {
+          name: currentUser.name,
+          email: currentUser.email
+        },
+        theme: {
+          color: "#3399cc"
+        },
+        modal: {
+          ondismiss: function() {
+            setBookingInProgress(false);
+          }
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+      
+    } catch (error) {
+      console.error('Error initiating booking:', error);
+      alert(error.response?.data?.message || 'Failed to initiate booking');
+      setBookingInProgress(false);
     }
   };
 
@@ -158,7 +193,7 @@ const BookingScreen = () => {
             src={room.imageurls[0]} 
             className="bigimg iii" 
             style={{marginTop:'30px'}} 
-            alt={room.name} 
+            alt={room.name}
           />
         </div>
         <div className="col-md-5 right">
@@ -173,17 +208,21 @@ const BookingScreen = () => {
             </b>
           </div>
           <div style={{textAlign:'right'}}>
-            <h4 style={{fontWeight:'600'}}>Billing</h4>
+            <h3 style={{fontWeight:'600'}}>Amount Details</h3>
             <hr className="hrtag" />
             <b>
               <p>Total Days: {totalDays}</p>
-              <p>Rent Per Day: {room.rentperday}</p>
-              <p>Total Amount: {totalAmount}</p>
+              <p>Rent Per Day: ₹{room.rentperday}</p>
+              <p>Total Amount: ₹{totalAmount}</p>
             </b>
           </div>
           <div style={{float:'right'}}>
-            <button className="btn btn-primary" onClick={bookRoom}>
-              Pay Now
+            <button 
+              className="btn btn-primary" 
+              onClick={bookRoom}
+              disabled={bookingInProgress || loading || error || !totalAmount}
+            >
+              {bookingInProgress ? 'Processing...' : 'Pay Now'}
             </button>
           </div>
         </div>

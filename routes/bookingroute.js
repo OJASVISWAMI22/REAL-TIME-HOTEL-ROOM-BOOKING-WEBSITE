@@ -2,41 +2,80 @@ const express = require("express");
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const moment = require('moment');
+const mongoose = require('mongoose');
+
 const Booking = require('../models/booking');
 const Room = require('../models/room');
 
-// Middleware to validate booking details
-const validateBookingDetails = (req, res, next) => {
-  const { room, user, bookingDates, billing } = req.body;
+// Simplified validation middleware to match the model
+const validateBookingRequest = async (req, res, next) => {
 
-  // Check for required fields
-  if (!room || !user || !bookingDates || !billing) {
-    return res.status(400).json({ message: 'Missing required booking information' });
+  console.log("Full booking request body:", JSON.stringify(req.body, null, 2));
+
+  const { room, user, fromDate, toDate, totalAmount, totalDays, paymentId } = req.body;
+
+  // Log individual fields for debugging
+  console.log("Extracted fields:", {
+    room,
+    user,
+    fromDate,
+    toDate,
+    totalAmount,
+    totalDays,
+    paymentId
+  });
+  const validationErrors = [];
+
+  // Basic required field validation
+  if (!room) validationErrors.push('Room ID is required');
+  if (!user) validationErrors.push('User ID is required');
+  if (!fromDate) validationErrors.push('From date is required');
+  if (!toDate) validationErrors.push('To date is required');
+  if (!totalAmount) validationErrors.push('Total amount is required');
+  if (!totalDays) validationErrors.push('Total days is required');
+
+  // Date validation
+  if (fromDate && toDate) {
+    const fromMoment = moment(fromDate, 'YYYY-MM-DD', true);
+    const toMoment = moment(toDate, 'YYYY-MM-DD', true);
+
+    if (!fromMoment.isValid()) {
+      validationErrors.push('Invalid from date format. Use YYYY-MM-DD');
+    }
+    if (!toMoment.isValid()) {
+      validationErrors.push('Invalid to date format. Use YYYY-MM-DD');
+    }
+    if (fromMoment.isValid() && toMoment.isValid() && toMoment.isBefore(fromMoment)) {
+      validationErrors.push('To date cannot be before from date');
+    }
   }
 
-  // Validate dates
-  const from = moment(bookingDates.fromDate, 'DD-MM-YYYY');
-  const to = moment(bookingDates.toDate, 'DD-MM-YYYY');
-
-  if (!from.isValid() || !to.isValid()) {
-    return res.status(400).json({ message: 'Invalid date format' });
+  // Numeric validation
+  if (totalAmount && totalAmount <= 0) {
+    validationErrors.push('Total amount must be positive');
+  }
+  if (totalDays && totalDays <= 0) {
+    validationErrors.push('Total days must be positive');
   }
 
-  if (to.isBefore(from)) {
-    return res.status(400).json({ message: 'End date cannot be before start date' });
+  if (validationErrors.length > 0) {
+    return res.status(400).json({
+      status: 'error',
+      message: validationErrors.join(', ')
+    });
   }
 
   next();
 };
 
-// Check room availability
+// Room availability check
 const checkRoomAvailability = async (roomId, fromDate, toDate) => {
   const existingBookings = await Booking.find({
     roomid: roomId,
     $or: [
       {
-        'bookingDates.fromDate': { $lte: toDate },
-        'bookingDates.toDate': { $gte: fromDate }
+        fromdate: { $lte: toDate },
+        todate: { $gte: fromDate }
       }
     ]
   });
@@ -44,91 +83,87 @@ const checkRoomAvailability = async (roomId, fromDate, toDate) => {
   return existingBookings.length === 0;
 };
 
-router.post("/bookroom", validateBookingDetails, async (req, res) => {
-  const { 
-    room, 
-    user, 
-    bookingDates, 
-    billing, 
-    paymentId 
-  } = req.body;
+// Booking route
+router.post("/bookroom", validateBookingRequest, async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
   
   try {
-    // Verify room availability
-    const isAvailable = await checkRoomAvailability(room.roomId, bookingDates.fromDate, bookingDates.toDate);
+    const { room: roomId, user, fromDate, toDate, totalAmount, totalDays, paymentId } = req.body;
+    const roomDetails = await Room.findById(roomId);
+    if (!roomDetails) {
+      throw new Error('Room not found');
+    }
+    // Check room availability
+    const isAvailable = await checkRoomAvailability(roomId, fromDate, toDate);
     if (!isAvailable) {
-      return res.status(400).json({ message: 'Room is not available for the selected dates' });
-    }
-
-    // Generate a unique booking reference
-    const bookingReference = uuidv4();
-
-    // Create new booking
-    const newBooking = new Booking({
-      room: {
-        name: room.name,
-        roomId: room.roomId,
-        rentPerDay: room.rentPerDay,
-        maxCount: room.maxCount
-      },
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email
-      },
-      bookingDates: {
-        fromDate: bookingDates.fromDate,
-        toDate: bookingDates.toDate
-      },
-      billing: {
-        totalDays: billing.totalDays,
-        totalAmount: billing.totalAmount
-      },
-      transactionid: paymentId || bookingReference,
-      bookingReference,
-      status: 'confirmed',
-      bookingTimestamp: new Date().toISOString()
-    });
-
-    // Save booking
-    const savedBooking = await newBooking.save();
-
-    // Update room's current bookings
-    const roomToUpdate = await Room.findById(room.roomId);
-    if (!roomToUpdate) {
-      return res.status(404).json({ message: 'Room not found' });
-    }
-
-    roomToUpdate.currentbooking.push({
-      bookingid: savedBooking._id,
-      fromdate: bookingDates.fromDate,
-      todate: bookingDates.toDate,
-      userid: user.id,
-      status: savedBooking.status,
-    });
-
-    await roomToUpdate.save();
-
-    // Send confirmation response
-    res.status(200).json({ 
-      message: 'Room booked successfully', 
-      booking: savedBooking,
-      bookingReference 
-    });
-  } catch (error) {
-    console.error("Booking error:", error);
-    
-    // Differentiate between different types of errors
-    if (error.name === 'ValidationError') {
-      return res.status(400).json({ 
-        message: 'Validation error', 
-        details: error.errors 
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(409).json({
+        status: 'error',
+        message: 'Room is not available for the selected dates'
       });
     }
 
-    return res.status(500).json({ 
-      message: 'Internal server error', 
-      error: error.message 
+    // Create new booking - matching the schema structure
+    const newBooking = new Booking({
+      room: roomDetails.name,
+      roomid: roomId,
+      userid: user,
+      fromdate: fromDate,
+      todate: toDate,
+      totalamount: totalAmount,
+      totaldays: totalDays,
+      transactionid: paymentId || uuidv4(),
+      status: "booked"
+    });
+
+    const savedBooking = await newBooking.save({ session });
+
+    // Update room's current bookings
+    await Room.findByIdAndUpdate(
+      roomId,
+      {
+        $push: {
+          currentbooking: {
+            bookingid: savedBooking._id,
+            fromdate: fromDate,
+            todate: toDate,
+            userid: user,
+            status: "booked"
+          }
+        }
+      },
+      { session, new: true }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Room booked successfully',
+      booking: savedBooking
+    });
+
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error('Booking error:', error);
+
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Validation error',
+        errors: Object.values(error.errors).map(err => err.message)
+      });
+    }
+
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+      error: error.message
     });
   }
 });
