@@ -5,7 +5,7 @@ import moment from "moment";
 import { useRazorpay } from "react-razorpay";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
-
+import Swal from 'sweetalert2'
 const RAZORPAY_KEY_ID = "rzp_test_mIb4yljUBLSy6R";
 
 const BookingScreen = () => {
@@ -93,14 +93,17 @@ const BookingScreen = () => {
       const result = await axios.post('/api/bookings/bookroom', bookingDetails);
       
       if (result.data.status === 'success') {
-        alert('Booking successful!');
+        Swal.fire('Congratulations','Room booked scuceefully','sucess')
+        // alert('Booking successful!');
         navigate('/bookings');
+        
       } else {
         throw new Error(result.data.message);
       }
     } catch (error) {
-      console.error('Booking error:', error);
-      alert(error.response?.data?.message || error.message || 'Booking failed. Please try again.');
+      // console.error('Booking error:', error);
+      // alert(error.response?.data?.message || error.message || 'Booking failed. Please try again.');
+      Swal.fire('OOPS','Something went wrong','error')
     } finally {
       setBookingInProgress(false);
     }

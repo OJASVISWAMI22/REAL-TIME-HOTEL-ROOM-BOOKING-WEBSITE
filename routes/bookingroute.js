@@ -10,20 +10,20 @@ const Room = require('../models/room');
 // Simplified validation middleware to match the model
 const validateBookingRequest = async (req, res, next) => {
 
-  console.log("Full booking request body:", JSON.stringify(req.body, null, 2));
+  // console.log("Full booking request body:", JSON.stringify(req.body, null, 2));
 
   const { room, user, fromDate, toDate, totalAmount, totalDays, paymentId } = req.body;
 
   // Log individual fields for debugging
-  console.log("Extracted fields:", {
-    room,
-    user,
-    fromDate,
-    toDate,
-    totalAmount,
-    totalDays,
-    paymentId
-  });
+  // console.log("Extracted fields:", {
+  //   room,
+  //   user,
+  //   fromDate,
+  //   toDate,
+  //   totalAmount,
+  //   totalDays,
+  //   paymentId
+  // });
   const validationErrors = [];
 
   // Basic required field validation

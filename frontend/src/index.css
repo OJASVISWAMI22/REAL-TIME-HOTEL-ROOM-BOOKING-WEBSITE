@@ -82,11 +82,11 @@ body{
 .iii{
   width:600px;
 }
-input{
+input,select,.won{
   box-shadow: none !important;
   margin-top: 15px;
-  height: 50px;
   border: 1.7px solid rgb(0, 0, 0)!important;
+  height: 50px!important;
 }
 .imgbox1{
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -97,4 +97,14 @@ input{
 }
 .aaaa{
   margin-left: 40vw!important;
+}
+p,b{
+  cursor: default!important;
+}
+.ant-picker input{
+  height: 35px!important;
+  margin-top: 2px;
+  border-radius: 3px;
+  padding-left: 15px!important;
+  cursor: default;
 }

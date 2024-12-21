@@ -16,7 +16,8 @@ const Homescreen = () => {
   const [fromdate, setfromdate] = useState();
   const [todate, settodate] = useState();
   const [duplicateroom, setduplicateroom] = useState([]);
-
+  const[searchkey,setsearchkey]=useState('');
+  const[type,settype]=useState('All')
   useEffect(() => {
     const getroom = async () => {
       try {
@@ -33,53 +34,62 @@ const Homescreen = () => {
     };
     getroom();
   }, []);
-
+  
   const filterbydate = (dates, dateStrings) => {
     setfromdate(dates[0].format("DD-MM-YYYY"));
     settodate(dates[1].format("DD-MM-YYYY"));
 
     var temproom = [];
     for (const room of duplicateroom) {
-      var available = false;
-      if (room.currentbooking.length > 0) {
+      var available = true;  // Changed to true by default
+      if (room.currentbooking && room.currentbooking.length > 0) {
         for (const booking of room.currentbooking) {
+          // Check if the selected dates overlap with any booking
           if (
-            !moment(
-              moment(dates[0].format("DD-MM-YYYY")).isBetween(
-                booking.fromdate,
-                booking.todate
-              )
-            ) &&
-            !moment(
-              moment(dates[1].format("DD-MM-YYYY")).isBetween(
-                booking.fromdate,
-                booking.todate
-              )
-            )
+            moment(dates[0].format("DD-MM-YYYY")).isBetween(
+              booking.fromdate,
+              booking.todate
+            ) ||
+            moment(dates[1].format("DD-MM-YYYY")).isBetween(
+              booking.fromdate,
+              booking.todate
+            ) ||
+            moment(dates[0].format("DD-MM-YYYY")) === moment(booking.fromdate) ||
+            moment(dates[0].format("DD-MM-YYYY")) === moment(booking.todate) ||
+            moment(dates[1].format("DD-MM-YYYY")) === moment(booking.fromdate) ||
+            moment(dates[1].format("DD-MM-YYYY")) === moment(booking.todate)
           ) {
-            if (
-              moment(dates[0].format("DD-MM-YYYY")) !== booking.fromdate &&
-              moment(dates[0].format("DD-MM-YYYY")) !== booking.todate &&
-              moment(dates[1].format("DD-MM-YYYY")) !== booking.fromdate &&
-              moment(dates[1].format("DD-MM-YYYY")) !== booking.todate
-            ) {
-              available = true;
-            }
+            available = false;
+            break;  // Exit the loop if any overlap is found
           }
         }
       }
-      if (available == true || room.currentbooking.length == 0) {
+      if (available) {
         temproom.push(room);
       }
     }
     setrooms(temproom);
   };
-
+  const filterbysearch=()=>{
+    const temprooms=duplicateroom.filter(room=>room.name.toLowerCase().
+    includes(searchkey.toLowerCase()))
+    setrooms(temprooms)
+  }
+  const filterbytype=(e)=>{
+    settype(e)
+    if(e!=='All'){
+    const temprooms=duplicateroom.filter(room=>room.type==e)
+    setrooms(temprooms)
+    }
+    else{
+      setrooms(duplicateroom)
+    }
+  }
   return (
     <div className="container">
-      <div className="row mt-5">
+      <div className="row mt-5 imgbox ">
         <div className="col-md-3">
-          <RangePicker 
+          <RangePicker className="won"
             format="DD-MM-YYYY" 
             onChange={filterbydate}
             disabledDate={(current) => {
@@ -87,11 +97,25 @@ const Homescreen = () => {
             }}
           />
         </div>
+        <div className="col-md-5">
+          <input type="text" className="form-control" placeholder="Search Rooms" 
+          value={searchkey} onChange={(e)=>{setsearchkey(e.target.value)}}
+          onKeyUp={filterbysearch}
+          />
+        </div>
+        <div className="col-md-4">
+        <select className="form-control" value={type} onChange={(e)=>{filterbytype(e.target.value)}}>
+          <option value="All">All</option>
+          <option value="Deluxe">Deluxe</option>
+          <option value="Standard">Standard</option>
+          <option value="Suite">Suite</option>
+        </select>
+        </div>
       </div>
       <div className="row justify-content-center mt-5">
         {loading ? (
           <Loader />
-        ) : rooms.length > 0 ? (
+        ) : (
           rooms.map((room) => {
             return (
               <div className="col-md-9 mt-4" key={room._id}>
@@ -99,9 +123,7 @@ const Homescreen = () => {
               </div>
             );
           })
-        ) : (
-          <Error message={"No Rooms Available"} />
-        )}
+        ) }
       </div>
     </div>
   );
