@@ -19,6 +19,7 @@ const BookingScreen = () => {
   const navigate = useNavigate();
   const { Razorpay } = useRazorpay();
 
+  // Fetch room details
   useEffect(() => {
     const getRoomById = async () => {
       try {
@@ -35,6 +36,7 @@ const BookingScreen = () => {
     getRoomById();
   }, [roomid]);
 
+  // Calculate total days and amount
   useEffect(() => {
     if (room) {
       const from = moment(fromdate, 'DD-MM-YYYY');
@@ -44,47 +46,40 @@ const BookingScreen = () => {
         console.error('Invalid date format');
         return;
       }
-  
+    
       const days = to.diff(from, 'days') + 1;
       setTotalDays(days);
       setTotalAmount(room.rentperday * days);
     }
   }, [room, fromdate, todate]);
 
-  // const handlePaymentSuccess = async (response) => {
-  //   try {
-  //     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-      
-  //     const bookingDetails = {
-  //       room: room._id,  // Send room ID instead of name
-  //       user: currentUser._id,
-  //       fromDate: moment(fromdate, 'DD-MM-YYYY').format('YYYY-MM-DD'), // Change date format
-  //       toDate: moment(todate, 'DD-MM-YYYY').format('YYYY-MM-DD'),     // Change date format
-  //       totalAmount: totalAmount,
-  //       totalDays: totalDays,
-  //       paymentId: response.razorpay_payment_id
-  //     };
+  const validateDates = () => {
+    const from = moment(fromdate, 'DD-MM-YYYY');
+    const to = moment(todate, 'DD-MM-YYYY');
+    const today = moment().startOf('day');
 
-  //     const result = await axios.post('/api/bookings/bookroom', bookingDetails);
-      
-  //     if (result.data.status === 'success') {
-  //       alert('Booking successful!');
-  //       navigate('/bookings');
-  //     } else {
-  //       throw new Error(result.data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error('Booking error:', error);
-  //     alert(error.response?.data?.message || 'Booking failed. Please try again.');
-  //   } finally {
-  //     setBookingInProgress(false);
-  //   }
-  // };
+    if (!from.isValid() || !to.isValid()) {
+      alert('Invalid booking dates');
+      return false;
+    }
+
+    if (from.isBefore(today)) {
+      alert('Cannot book dates in the past');
+      return false;
+    }
+
+    if (from.isAfter(to)) {
+      alert('Check-out date must be after check-in date');
+      return false;
+    }
+
+    return true;
+  };
 
   const handlePaymentSuccess = async (response) => {
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  
+      
       const bookingDetails = {
         room: room._id,
         user: currentUser._id,
@@ -94,10 +89,7 @@ const BookingScreen = () => {
         totalDays,
         paymentId: response.razorpay_payment_id
       };
-  
-      // Add detailed request logging
-      console.log('Sending booking details:', JSON.stringify(bookingDetails, null, 2));
-  
+
       const result = await axios.post('/api/bookings/bookroom', bookingDetails);
       
       if (result.data.status === 'success') {
@@ -107,19 +99,13 @@ const BookingScreen = () => {
         throw new Error(result.data.message);
       }
     } catch (error) {
-      // Add detailed error logging
-      console.error('Booking error details:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
-      });
-      
-      // Show more specific error message
+      console.error('Booking error:', error);
       alert(error.response?.data?.message || error.message || 'Booking failed. Please try again.');
     } finally {
       setBookingInProgress(false);
     }
   };
+
   const bookRoom = async () => {
     try {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -128,22 +114,7 @@ const BookingScreen = () => {
         return;
       }
 
-      // Validate dates
-      const from = moment(fromdate, 'DD-MM-YYYY');
-      const to = moment(todate, 'DD-MM-YYYY');
-      
-      if (!from.isValid() || !to.isValid()) {
-        alert('Invalid booking dates');
-        return;
-      }
-
-      if (from.isAfter(to)) {
-        alert('Check-out date must be after check-in date');
-        return;
-      }
-
-      if (from.isBefore(moment().startOf('day'))) {
-        alert('Cannot book dates in the past');
+      if (!validateDates()) {
         return;
       }
 
@@ -151,7 +122,7 @@ const BookingScreen = () => {
 
       const options = {
         key: RAZORPAY_KEY_ID,
-        amount: totalAmount * 100, // Convert to paise
+        amount: totalAmount * 100,
         currency: "INR",
         name: "Room Booking",
         description: `${room.name} (${totalDays} days)`,
@@ -164,9 +135,7 @@ const BookingScreen = () => {
           color: "#3399cc"
         },
         modal: {
-          ondismiss: function() {
-            setBookingInProgress(false);
-          }
+          ondismiss: () => setBookingInProgress(false)
         }
       };
 

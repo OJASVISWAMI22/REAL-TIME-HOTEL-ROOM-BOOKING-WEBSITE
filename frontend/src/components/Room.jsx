@@ -22,9 +22,10 @@ const Room = ({ room ,fromdate,todate}) => {
           {
             (fromdate && todate) &&(
               <Link to={`/book/${room._id}/${fromdate}/${todate}`}>
-            <Button className="btn btn-dark btn">Book Now</Button>
-          </Link>
+              <Button className="btn btn-dark btn">Book Now</Button>
+            </Link>
             )
+            
           }
           <button className="btn btn-dark btn" onClick={handleShow}>
             About

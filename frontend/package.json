@@ -19,7 +19,8 @@
     "react-dom": "^18.3.1",
     "react-razorpay": "^3.0.1",
     "react-router-dom": "^6.26.1",
-    "react-spinners": "^0.14.1"
+    "react-spinners": "^0.14.1",
+    "sweetalert2": "^11.15.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
