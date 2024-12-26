@@ -39,8 +39,8 @@ const Navbar = () => {
                   className={`dropdown-menu${isOpen ? " show" : ""}`}
                   aria-labelledby="dropdownMenuButton"
                 >
-                  <a className="dropdown-item" href="/bookings">
-                    Bookings
+                  <a className="dropdown-item" href="/profile">
+                    Profile
                   </a>
                   <a className="dropdown-item" href="#" onClick={logout}>
                     Logout

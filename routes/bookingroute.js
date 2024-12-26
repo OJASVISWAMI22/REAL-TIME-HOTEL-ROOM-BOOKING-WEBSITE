@@ -167,5 +167,14 @@ router.post("/bookroom", validateBookingRequest, async (req, res) => {
     });
   }
 });
-
+router.post("/getbooking",async(req,res)=>{
+  const userid=req.body.userid;
+  try{
+    const bookings=await Booking.find({userid:userid})
+    res.json(bookings)
+  }
+  catch(error){
+    return res.status(500).json({error})
+  }
+})
 module.exports = router;

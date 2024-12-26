@@ -95,7 +95,7 @@ const BookingScreen = () => {
       if (result.data.status === 'success') {
         Swal.fire('Congratulations','Room booked scuceefully','sucess')
         // alert('Booking successful!');
-        navigate('/bookings');
+        navigate('/profile');
         
       } else {
         throw new Error(result.data.message);
