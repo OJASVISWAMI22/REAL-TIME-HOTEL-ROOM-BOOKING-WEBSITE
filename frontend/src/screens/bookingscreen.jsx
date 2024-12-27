@@ -22,6 +22,9 @@ const BookingScreen = () => {
   // Fetch room details
   useEffect(() => {
     const getRoomById = async () => {
+      if(!localStorage.getItem('currentUser')){
+        window.location.href='/login'
+      }
       try {
         setLoading(true);
         const { data } = await axios.post("/api/rooms/getroombyid", { roomid });

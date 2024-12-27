@@ -167,6 +167,8 @@ router.post("/bookroom", validateBookingRequest, async (req, res) => {
     });
   }
 });
+
+
 router.post("/getbooking",async(req,res)=>{
   const userid=req.body.userid;
   try{
@@ -177,4 +179,24 @@ router.post("/getbooking",async(req,res)=>{
     return res.status(500).json({error})
   }
 })
+
+router.post("/cancelbooking",async(req,res)=>{
+  const{bookingid,roomid}=req.body
+  try {
+    const bookingobject=await Booking.findOne({_id:bookingid})
+    bookingobject.status='cancelled'
+    await bookingobject.save()
+    const room=await Room.findOne({_id:roomid})
+     const bookings=room.currentbooking
+     const temp=bookings.filter(booking=>booking.bookingid.toString()!==bookingid)
+     room.currentbooking=temp
+
+     await room.save()
+
+     res.send("Booking Cancelled Sucessfully")
+  } catch (error) {
+    return res.status(400).json({error})
+  }
+})
+
 module.exports = router;

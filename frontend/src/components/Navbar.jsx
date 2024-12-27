@@ -18,7 +18,7 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary navnav">
       <div className="container-fluid">
-        <a className="navbar-brand title" href="#">
+        <a className="navbar-brand title" href="/home">
           TravelNest
         </a>
 
