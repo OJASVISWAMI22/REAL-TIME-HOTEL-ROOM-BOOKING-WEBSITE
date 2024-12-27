@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Navbar = () => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("currentUser")));
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("currentUser"))
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -12,7 +14,7 @@ const Navbar = () => {
   const logout = () => {
     localStorage.removeItem("currentUser");
     setUser(null);
-    window.location.href = '/login';
+    window.location.href = "/login";
   };
 
   return (

@@ -4,8 +4,8 @@ import "antd/dist/reset.css";
 import axios from "axios";
 import Room from "../components/Room";
 import Loader from "../components/Loader";
-import Error from "../components/Error";
 import moment from "moment";
+import { HiQuestionMarkCircle } from "react-icons/hi2";
 
 const { RangePicker } = DatePicker;
 
@@ -16,8 +16,8 @@ const Homescreen = () => {
   const [fromdate, setfromdate] = useState();
   const [todate, settodate] = useState();
   const [duplicateroom, setduplicateroom] = useState([]);
-  const[searchkey,setsearchkey]=useState('');
-  const[type,settype]=useState('All')
+  const [searchkey, setsearchkey] = useState("");
+  const [type, settype] = useState("All");
   useEffect(() => {
     const getroom = async () => {
       try {
@@ -34,17 +34,16 @@ const Homescreen = () => {
     };
     getroom();
   }, []);
-  
+
   const filterbydate = (dates, dateStrings) => {
     setfromdate(dates[0].format("DD-MM-YYYY"));
     settodate(dates[1].format("DD-MM-YYYY"));
 
     var temproom = [];
     for (const room of duplicateroom) {
-      var available = true;  // Changed to true by default
+      var available = true;
       if (room.currentbooking && room.currentbooking.length > 0) {
         for (const booking of room.currentbooking) {
-          // Check if the selected dates overlap with any booking
           if (
             moment(dates[0].format("DD-MM-YYYY")).isBetween(
               booking.fromdate,
@@ -54,13 +53,15 @@ const Homescreen = () => {
               booking.fromdate,
               booking.todate
             ) ||
-            moment(dates[0].format("DD-MM-YYYY")) === moment(booking.fromdate) ||
+            moment(dates[0].format("DD-MM-YYYY")) ===
+              moment(booking.fromdate) ||
             moment(dates[0].format("DD-MM-YYYY")) === moment(booking.todate) ||
-            moment(dates[1].format("DD-MM-YYYY")) === moment(booking.fromdate) ||
+            moment(dates[1].format("DD-MM-YYYY")) ===
+              moment(booking.fromdate) ||
             moment(dates[1].format("DD-MM-YYYY")) === moment(booking.todate)
           ) {
             available = false;
-            break;  // Exit the loop if any overlap is found
+            break;
           }
         }
       }
@@ -70,62 +71,85 @@ const Homescreen = () => {
     }
     setrooms(temproom);
   };
-  const filterbysearch=()=>{
-    const temprooms=duplicateroom.filter(room=>room.name.toLowerCase().
-    includes(searchkey.toLowerCase()))
-    setrooms(temprooms)
-  }
-  const filterbytype=(e)=>{
-    settype(e)
-    if(e!=='All'){
-    const temprooms=duplicateroom.filter(room=>room.type==e)
-    setrooms(temprooms)
+  const filterbysearch = () => {
+    const temprooms = duplicateroom.filter((room) =>
+      room.name.toLowerCase().includes(searchkey.toLowerCase())
+    );
+    setrooms(temprooms);
+  };
+  const filterbytype = (e) => {
+    settype(e);
+    if (e !== "All") {
+      const temprooms = duplicateroom.filter((room) => room.type == e);
+      setrooms(temprooms);
+    } else {
+      setrooms(duplicateroom);
     }
-    else{
-      setrooms(duplicateroom)
-    }
-  }
+  };
   return (
-    <div className="container">
-      <div className="row mt-5 imgbox ">
-        <div className="col-md-3">
-          <RangePicker className="won"
-            format="DD-MM-YYYY" 
-            onChange={filterbydate}
-            disabledDate={(current) => {
-              return current && current < moment().startOf('day');
-            }}
-          />
+    <>
+      <div>
+        <HiQuestionMarkCircle
+          className="question"
+          onClick={() => {
+            window.location.href = "/help";
+          }}
+        />
+      </div>
+      <div className="container">
+        <div className="row mt-5 imgbox ">
+          <div className="col-md-3">
+            <RangePicker
+              className="won"
+              format="DD-MM-YYYY"
+              onChange={filterbydate}
+              disabledDate={(current) => {
+                return current && current < moment().startOf("day");
+              }}
+            />
+          </div>
+          <div className="col-md-5">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search Rooms"
+              value={searchkey}
+              onChange={(e) => {
+                setsearchkey(e.target.value);
+              }}
+              onKeyUp={filterbysearch}
+            />
+          </div>
+          <div className="col-md-4">
+            <select
+              className="form-control"
+              value={type}
+              onChange={(e) => {
+                filterbytype(e.target.value);
+              }}
+            >
+              <option value="All">All</option>
+              <option value="Deluxe">Deluxe</option>
+              <option value="Standard">Standard</option>
+              <option value="Suite">Suite</option>
+            </select>
+          </div>
         </div>
-        <div className="col-md-5">
-          <input type="text" className="form-control" placeholder="Search Rooms" 
-          value={searchkey} onChange={(e)=>{setsearchkey(e.target.value)}}
-          onKeyUp={filterbysearch}
-          />
-        </div>
-        <div className="col-md-4">
-        <select className="form-control" value={type} onChange={(e)=>{filterbytype(e.target.value)}}>
-          <option value="All">All</option>
-          <option value="Deluxe">Deluxe</option>
-          <option value="Standard">Standard</option>
-          <option value="Suite">Suite</option>
-        </select>
+        <div className="row justify-content-center mt-5">
+          {loading ? (
+            <Loader />
+          ) : (
+            rooms.map((room) => {
+              return (
+                <div className="col-md-9 mt-4" key={room._id}>
+                  <Room room={room} fromdate={fromdate} todate={todate} />
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
-      <div className="row justify-content-center mt-5">
-        {loading ? (
-          <Loader />
-        ) : (
-          rooms.map((room) => {
-            return (
-              <div className="col-md-9 mt-4" key={room._id}>
-                <Room room={room} fromdate={fromdate} todate={todate} />
-              </div>
-            );
-          })
-        ) }
-      </div>
-    </div>
+    </>
   );
 };
 

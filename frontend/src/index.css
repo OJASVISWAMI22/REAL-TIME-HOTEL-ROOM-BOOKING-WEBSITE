@@ -111,3 +111,60 @@ p,b{
 .w{
   margin-left: 75%;
 }
+.qq{
+  margin-left: 50px;
+  margin-right: 50px;
+}
+.ant-tabs-tab-btn{
+  font-weight: 550;
+  font-size: 22px;
+}
+.ppp{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.land{
+  color: rgb(255, 255, 255);
+  background-color: rgb(26, 25, 25);
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+  padding:250px
+}
+.von{
+  font-size: 100px;
+  margin-bottom: 50px;
+}
+.laka{
+  margin-top: 80px;
+  padding: 10px;
+  border-radius: 10px;
+}
+.rrrr{
+  display: flex;
+  justify-content: center;
+}
+.hh{
+  margin-left: 25px;
+  height: 110px;
+  width:auto ;
+}
+.question{
+  font-size: 70px;
+  position:fixed;
+  right: 3%;
+  top: 40%;
+  transform: translate(-40%);
+  z-index: 100;
+}
+.ccc{
+  margin: 8%;
+  height: 70vh;
+  width: 80vw!important;
+}
+.qwer{
+  width: 200px;
+  margin: 10px;
+  margin-left: 43%;
+}
