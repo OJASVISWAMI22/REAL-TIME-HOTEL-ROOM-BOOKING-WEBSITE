@@ -14,8 +14,7 @@ const dbconfig = require("./db");
 const app = express();
 
 const corsOptions = {
-  origin: ["https://travelnest-sand.vercel.app", "https://travelnest-cm0bqzezb-ojasviswami22s-projects.vercel.app", "http://localhost:5173"],
-  credentials: true,
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
