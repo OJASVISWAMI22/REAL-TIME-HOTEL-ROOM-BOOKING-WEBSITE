@@ -27,7 +27,7 @@ const Navbar = () => {
         <div className="collapse navbar-collapse">
           <div className="navbar-nav ms-auto">
             {user ? (
-              <div className="dropdown">
+              <div className="dropdown xx">
                 <button
                   className="btn btn-dark dropdown-toggle"
                   type="button"
@@ -51,10 +51,10 @@ const Navbar = () => {
               </div>
             ) : (
               <>
-                <a className="nav-link abc l" href="/login">
+                <a className="nav-link abc xx" href="/login">
                   Login
                 </a>
-                <a className="nav-link abc s" href="/register">
+                <a className="nav-link abc xx" href="/register">
                   Register
                 </a>
               </>

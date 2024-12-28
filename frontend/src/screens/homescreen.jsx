@@ -102,8 +102,8 @@ const Homescreen = () => {
         />
       </div>
       <div className="container">
-        <div className="row mt-5 imgbox ">
-          <div className="col-md-3">
+        <div className="row mt-3 imgbox ">
+          <div className="col-md-4">
             <RangePicker
               className="won"
               format="DD-MM-YYYY"
@@ -113,7 +113,7 @@ const Homescreen = () => {
               }}
             />
           </div>
-          <div className="col-md-5">
+          <div className="col-md-3">
             <input
               type="text"
               className="form-control"
@@ -140,13 +140,13 @@ const Homescreen = () => {
             </select>
           </div>
         </div>
-        <div className="row justify-content-center mt-5">
+        <div className="row justify-content-center mt-3">
           {loading ? (
             <Loader />
           ) : (
             rooms.map((room) => {
               return (
-                <div className="col-md-9 mt-4" key={room._id}>
+                <div className="col-md-8 mt-4" key={room._id}>
                   <Room room={room} fromdate={fromdate} todate={todate} />
                 </div>
               );

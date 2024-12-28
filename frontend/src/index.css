@@ -5,20 +5,21 @@
 }
 body{
   background-color: #efefef;
+  
 }
 .navnav{
+  width: 100vw;
   background: linear-gradient(to right, #aaeaf4, #66dfee, #80deea);
-  height: 11vh;
+  height: 10vh;
 }
 .title{
-  margin-right: 72vw;
-  font-size: 35px;
+  font-size: 30px;
   font-weight: 900;
   font-family:'Times New Roman', Times, serif;
 }
 .abc{
   color: rgb(0, 0, 0);
-  font-size: 23px;
+  font-size: 20px;
   font-weight: 600;
 }
 .abc:hover{
@@ -35,18 +36,28 @@ body{
   margin-right: 1vw;
 }
 .smallimg{
-  width: 350px;
-  height: 265px;
+  width: 22vw;
+  height: 35vh;
   border-radius: 5px !important;
 }
 .content{
-  margin-left: 60px;
+  margin-left: 10vw!important;
 }
 .imgbox{
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 5px;
-  margin-top: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   padding: 20px;
+}
+.aww{
+  zoom: 65%;
+}
+.qs{
+  zoom: 85%;
+}
+.aye{
+  zoom: 70%;
 }
 .bigimg{
   height: 400px;
@@ -73,8 +84,8 @@ body{
   width: 600px;
 }
 .hrtag{
-  width: 25vw;
-  margin-left: 125px;
+  width: 30vw;
+  margin-left: 10rem;
 }
 .bs{
   margin:25px 50px;
@@ -84,9 +95,9 @@ body{
 }
 input,select,.won{
   box-shadow: none !important;
-  margin-top: 15px;
   border: 1.7px solid rgb(0, 0, 0)!important;
-  height: 50px!important;
+  height: 40px!important;
+  cursor: pointer!important;
 }
 .imgbox1{
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -98,12 +109,17 @@ input,select,.won{
 .aaaa{
   margin-left: 40vw!important;
 }
+.ht{
+  height: 50px!important;
+}
 p,b{
   cursor: default!important;
 }
+.vg{
+  font-size: .4rem!important;
+}
 .ant-picker input{
-  height: 35px!important;
-  margin-top: 2px;
+  height: 30px!important;
   border-radius: 3px;
   padding-left: 15px!important;
   cursor: default;
@@ -130,41 +146,51 @@ p,b{
   width: 100%;
   height: 100vh;
   text-align: center;
-  padding:250px
+  padding:150px 0px 300px;
 }
 .von{
-  font-size: 100px;
-  margin-bottom: 50px;
+  font-size: 5rem;
+  margin-bottom: 20px;
 }
 .laka{
-  margin-top: 80px;
+  margin-top: 50px;
   padding: 10px;
   border-radius: 10px;
 }
 .rrrr{
   display: flex;
   justify-content: center;
+  margin-bottom: 20px;
 }
 .hh{
   margin-left: 25px;
-  height: 110px;
+  height: 5.5rem;
   width:auto ;
 }
 .question{
-  font-size: 70px;
+  font-size: 50px;
   position:fixed;
   right: 3%;
   top: 40%;
   transform: translate(-40%);
   z-index: 100;
+  cursor:pointer;
 }
 .ccc{
-  margin: 8%;
-  height: 70vh;
-  width: 80vw!important;
+  margin: 5% 0% 2% 15%;
+  height: 75vh;
+  width: 70vw!important;
 }
 .qwer{
   width: 200px;
-  margin: 10px;
   margin-left: 43%;
+}
+.xx{
+  margin-right: 1.5vw!important;
+}
+.temp{
+  zoom: 85%;
+}
+.wer{
+  zoom: 80%;
 }

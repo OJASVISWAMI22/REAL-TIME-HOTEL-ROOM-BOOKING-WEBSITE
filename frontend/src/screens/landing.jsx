@@ -5,7 +5,7 @@ const Landing = () => {
         <h1 className="von">Travel Nest</h1>
         <img className="hh" src="favicon.png" alt="" />
       </div>
-      <h2>" Where Luxury Meets Leisure, Every Stay Becomes a Story ... "</h2>
+      <h3>" Where Luxury Meets Leisure, Every Stay Becomes a Story ... "</h3>
       <button
         className="btn btn-primary laka"
         onClick={() => {

@@ -49,7 +49,7 @@ const Register = () => {
     <div>
       {loading && <Loader />}
       {error && <Error></Error>}
-      <div className="row justify-content-center mt-5 imgbox1">
+      <div className="row justify-content-center mt-5 imgbox1 temp">
         <div className="col-md-5 mt-5">
           {success && <Success message={"Registration Successful"}></Success>}
           <div>

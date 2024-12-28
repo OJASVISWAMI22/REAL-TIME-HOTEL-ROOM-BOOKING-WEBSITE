@@ -44,7 +44,7 @@ const Profilescreen = () => {
       key: "2",
       label: "Profile",
       children: (
-        <div className="imgbox">
+        <div className="imgbox wer">
           <h1>My Profile</h1>
           <hr />
           <h2>Name : {user?.name}</h2>
@@ -101,7 +101,7 @@ const Mybooking = ({ onCancelBooking }) => {
   }, []);
 
   return (
-    <div className="row mb-5">
+    <div className="row mb-5 wer">
       <div className="col-md-12">
         {loading && <Loader />}
         {bookings &&

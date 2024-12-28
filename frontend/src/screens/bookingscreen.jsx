@@ -157,7 +157,7 @@ const BookingScreen = () => {
   if (!room) return <h1>Room not found</h1>;
 
   return (
-    <div className="imgbox bs">
+    <div className="imgbox bs aye">
       <div className="row mt-5 book left">
         <div className="col-md-5">
           <h3>{room.name}</h3>
@@ -173,7 +173,7 @@ const BookingScreen = () => {
             <h3 style={{ fontWeight: "700", marginBottom: "45px" }}>
               Booking Details
             </h3>
-            <hr className="hrtag" />
+            <hr className="hrtag " />
             <b>
               <p>
                 Name:{" "}

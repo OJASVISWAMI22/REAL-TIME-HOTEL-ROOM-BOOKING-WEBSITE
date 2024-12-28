@@ -7,8 +7,8 @@ const Room = ({ room, fromdate, todate }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
-    <div className="row imgbox">
-      <div className="col-md-4">
+    <div className="row imgbox qs">
+      <div className="col-md-3 ">
         <img src={room.imageurls[0]} className="smallimg" />
       </div>
       <div className="col-md-7 text-left content">
@@ -30,12 +30,12 @@ const Room = ({ room, fromdate, todate }) => {
         </div>
       </div>
 
-      <Modal show={show} onHide={handleClose} size="lg">
+      <Modal  className="aww" show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>{room.name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Carousel fade data-bs-theme="dark">
+          <Carousel fade data-bs-theme="dark ">
             {room.imageurls.map((url) => {
               return (
                 <Carousel.Item key={url}>
