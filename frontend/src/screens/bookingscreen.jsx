@@ -19,6 +19,10 @@ const BookingScreen = () => {
   const navigate = useNavigate();
   const { Razorpay } = useRazorpay();
 
+  const api = axios.create({
+    baseURL: 'https://real-time-hotel-room-booking-website.onrender.com'
+});
+
   useEffect(() => {
     const getRoomById = async () => {
       if (!localStorage.getItem("currentUser")) {
@@ -26,7 +30,7 @@ const BookingScreen = () => {
       }
       try {
         setLoading(true);
-        const { data } = await axios.post("/api/rooms/getroombyid", { roomid });
+        const { data } = await api.post("/api/rooms/getroombyid", { roomid });
         setRoom(data.room);
         setLoading(false);
       } catch (error) {
@@ -37,6 +41,7 @@ const BookingScreen = () => {
     getRoomById();
   }, [roomid]);
 
+  
   useEffect(() => {
     if (room) {
       const from = moment(fromdate, "DD-MM-YYYY");
@@ -90,7 +95,7 @@ const BookingScreen = () => {
         paymentId: response.razorpay_payment_id,
       };
 
-      const result = await axios.post("/api/bookings/bookroom", bookingDetails);
+      const result = await api.post("/api/bookings/bookroom", bookingDetails);
 
       if (result.data.status === "success") {
         Swal.fire("Congratulations", "Room booked scuceefully", "sucess");

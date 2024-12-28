@@ -3,6 +3,11 @@ import axios from "axios";
 import Error from "../components/Error.jsx";
 import Loader from "../components/Loader.jsx";
 import Success from "../components/Success.jsx";
+
+const api = axios.create({
+    baseURL: 'https://your-render-backend-url.onrender.com'
+});
+
 const Register = () => {
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
@@ -24,7 +29,7 @@ const Register = () => {
       };
       try {
         setloading(true);
-        const result = (await axios.post("/api/user/register", user)).data;
+        const result = (await api.post("/api/user/register", user)).data;
         setloading(false);
         setsuccess(true);
         setname("");

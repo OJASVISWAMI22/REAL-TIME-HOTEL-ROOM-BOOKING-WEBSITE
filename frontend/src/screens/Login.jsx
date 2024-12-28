@@ -2,6 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import Error from "../components/Error.jsx";
 import Loader from "../components/Loader.jsx";
+const api = axios.create({
+  baseURL: 'https://real-time-hotel-room-booking-website.onrender.com'
+});
+
 const Login = () => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
@@ -19,7 +23,7 @@ const Login = () => {
     };
     try {
       setloading(true);
-      const result = (await axios.post("/api/user/login", user)).data;
+      const result = (await api.post("/api/user/login", user)).data;
       setloading(false);
       localStorage.setItem("currentUser", JSON.stringify(result));
       window.location.href = "/home";

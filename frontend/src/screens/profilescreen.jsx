@@ -3,6 +3,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import Swal from "sweetalert2";
+const api = axios.create({
+  baseURL: 'https://real-time-hotel-room-booking-website.onrender.com'
+});
+
 const Profilescreen = () => {
   const user = JSON.parse(localStorage.getItem("currentUser"));
   const [loading, setLoading] = useState(false);
@@ -17,7 +21,7 @@ const Profilescreen = () => {
   const cancelbooking = async (bookingid, roomid) => {
     try {
       setLoading(true);
-      const result = await axios.post("/api/bookings/cancelbooking", {
+      const result = await api.post("/api/bookings/cancelbooking", {
         bookingid,
         roomid,
       });
@@ -80,7 +84,7 @@ const Mybooking = ({ onCancelBooking }) => {
     const fetchBookings = async () => {
       try {
         setLoading(true);
-        const response = await axios.post("/api/bookings/getbooking", {
+        const response = await api.post("/api/bookings/getbooking", {
           userid: user._id,
         });
         setbookings(response.data);

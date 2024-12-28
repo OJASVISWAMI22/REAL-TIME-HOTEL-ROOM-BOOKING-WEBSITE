@@ -9,6 +9,11 @@ import { HiQuestionMarkCircle } from "react-icons/hi2";
 
 const { RangePicker } = DatePicker;
 
+const api = axios.create({
+  baseURL: 'https://real-time-hotel-room-booking-website.onrender.com'
+});
+
+
 const Homescreen = () => {
   const [rooms, setrooms] = useState([]);
   const [loading, setloading] = useState();
@@ -22,7 +27,7 @@ const Homescreen = () => {
     const getroom = async () => {
       try {
         setloading(true);
-        const data = (await axios.get("/api/rooms/getallrooms")).data;
+        const data = (await api.get("/api/rooms/getallrooms")).data;
         setrooms(data.rooms);
         setduplicateroom(data.rooms);
         setloading(false);
