@@ -4,10 +4,6 @@ import Error from "../components/Error.jsx";
 import Loader from "../components/Loader.jsx";
 import Success from "../components/Success.jsx";
 
-const api = axios.create({
-    baseURL: 'https://your-render-backend-url.onrender.com'
-});
-
 const Register = () => {
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
@@ -17,6 +13,7 @@ const Register = () => {
   const [loading, setloading] = useState(false);
   const [error, seterror] = useState();
   const [success, setsuccess] = useState();
+
   const register = async () => {
     if (name == "" || email == "" || password == "" || cp == "") {
       alert("Please enter user details first");
@@ -29,13 +26,15 @@ const Register = () => {
       };
       try {
         setloading(true);
-        const result = (await api.post("/api/user/register", user)).data;
+        // Changed this line to use direct URL instead of axios instance
+        const result = (await axios.post('https://real-time-hotel-room-booking-website.onrender.com/api/user/register', user)).data;
         setloading(false);
         setsuccess(true);
         setname("");
         setemail("");
         setpassword("");
         setcp("");
+        window.location.href='/login'
       } catch (error) {
         setloading(false);
         console.log(error);
@@ -45,17 +44,16 @@ const Register = () => {
       alert("Unmatched Password !!");
     }
   };
+
   return (
     <div>
       {loading && <Loader />}
       {error && <Error></Error>}
-      <div className="row justify-content-center mt-5 imgbox1 temp">
+      <div className="row justify-content-center mt-5 imgbox1">
         <div className="col-md-5 mt-5">
           {success && <Success message={"Registration Successful"}></Success>}
           <div>
-            <center>
-              <h1>Register</h1>
-            </center>
+            <center><h1>Register</h1></center>
             <input
               type="text"
               className="form-control"

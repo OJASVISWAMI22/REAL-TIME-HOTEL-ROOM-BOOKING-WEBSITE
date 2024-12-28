@@ -1,7 +1,7 @@
 const Success = ({ message }) => {
   return (
     <>
-      <div class="alert alert-success" role="alert">
+      <div className="alert alert-success" role="alert">
         {message}
       </div>
     </>
