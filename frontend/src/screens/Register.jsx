@@ -3,6 +3,7 @@ import axios from "axios";
 import Error from "../components/Error.jsx";
 import Loader from "../components/Loader.jsx";
 import Success from "../components/Success.jsx";
+import styles from "./Register.module.css";
 
 const Register = () => {
   const [name, setname] = useState("");
@@ -15,26 +16,20 @@ const Register = () => {
   const [success, setsuccess] = useState("");  
 
   const register = async () => {
-
     seterror("");
     setsuccess("");
 
-    if (name == "" || email == "" || password == "" || cp == "") {
+    if (!name || !email || !password || !cp) {
       seterror("Please enter all user details");
       return;
     }
-    
+
     if (password !== cp) {
       seterror("Passwords don't match!");
       return;
     }
 
-    const user = {
-      name,
-      email,
-      password,
-      cp,
-    };
+    const user = { name, email, password, cp };
 
     try {
       setloading(true);
@@ -43,77 +38,81 @@ const Register = () => {
         user
       );
       setloading(false);
-      
+
       setsuccess(result.data.message || "Registration Successful");
-      
+
       setname("");
       setemail("");
       setpassword("");
       setcp("");
-      
+
       setTimeout(() => {
         window.location.href = "/login";
       }, 2000);
-      
     } catch (error) {
       setloading(false);
-      console.log(error);
-      
-      const errorMessage = error.response?.data?.message || 
-                          "Registration failed. Please try again.";
+      const errorMessage =
+        error.response?.data?.message ||
+        "Registration failed. Please try again.";
       seterror(errorMessage);
     }
   };
 
   return (
-    <div>
+    <div className={styles.page}>
       {loading && <Loader />}
-      
-      <div className="row justify-content-center mt-5 imgbox1">
-        <div className="col-md-5 mt-5">
+
+      <div className={styles.container}>
+
+        <div className={styles.leftPanel}>
+          <img
+            src="../../public/register.png"  
+            className={styles.illustration}
+            alt="side"
+          />
+        </div>
+        <div className={styles.rightPanel}>
+          <h1 className={styles.title}>Create Account</h1>
 
           {error && <Error message={error} />}
-          
           {success && <Success message={success} />}
-          
-          <div>
-            <center>
-              <h1>Register</h1>
-            </center>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) => setname(e.target.value)}
-            />
-            <input
-              type="email"
-              className="form-control"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setemail(e.target.value)}
-            />
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setpassword(e.target.value)}
-            />
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Confirm Password"
-              value={cp}
-              onChange={(e) => setcp(e.target.value)}
-            />
-          </div>
-          <center>
-            <button className="btn btn-primary mt-4" onClick={register}>
-              Register
-            </button>
-          </center>
+
+          <input
+            type="text"
+            className={styles.input}
+            placeholder="Full Name"
+            value={name}
+            onChange={(e) => setname(e.target.value)}
+          />
+          <input
+            type="email"
+            className={styles.input}
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setemail(e.target.value)}
+          />
+          <input
+            type="password"
+            className={styles.input}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setpassword(e.target.value)}
+          />
+          <input
+            type="password"
+            className={styles.input}
+            placeholder="Confirm Password"
+            value={cp}
+            onChange={(e) => setcp(e.target.value)}
+          />
+
+          <button className={styles.btn} onClick={register}>
+            Register
+          </button>
+
+          <p className={styles.switchText}>
+            Already have an account ? <a href="/login">Login</a>
+          </p>
         </div>
       </div>
     </div>
