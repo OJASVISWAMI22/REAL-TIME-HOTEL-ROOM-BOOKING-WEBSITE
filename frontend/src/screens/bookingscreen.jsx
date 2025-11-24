@@ -21,7 +21,7 @@ const BookingScreen = () => {
 
   const api = axios.create({
     baseURL: 'https://real-time-hotel-room-booking-website.onrender.com'
-});
+  });
 
   useEffect(() => {
     const getRoomById = async () => {
@@ -41,7 +41,7 @@ const BookingScreen = () => {
     getRoomById();
   }, [roomid]);
 
-  
+
   useEffect(() => {
     if (room) {
       const from = moment(fromdate, "DD-MM-YYYY");

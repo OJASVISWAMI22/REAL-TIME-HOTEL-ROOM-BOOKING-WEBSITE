@@ -11,55 +11,74 @@ const Login = () => {
   const [password, setpassword] = useState("");
 
   const [loading, setloading] = useState(false);
-  const [error, seterror] = useState();
+  const [error, seterror] = useState("");  
 
   const login = async () => {
-    if (email == " " || password == " ") {
-      alert("Please enter details first");
+    seterror("");
+
+    if (!email.trim() || !password.trim()) {
+      seterror("Please enter both email and password");
+      return;
     }
+
     const user = {
-      email,
-      password,
+      email: email.trim(),
+      password: password.trim(),
     };
+
     try {
       setloading(true);
       const result = (await api.post("/api/user/login", user)).data;
       setloading(false);
+      
       localStorage.setItem("currentUser", JSON.stringify(result));
+      
       window.location.href = "/home";
+      
     } catch (error) {
       setloading(false);
-      seterror(true);
+      
+      const errorMessage = error.response?.data?.message || 
+                          "Login failed. Please try again.";
+      seterror(errorMessage);
     }
   };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      login();
+    }
+  };
+
   return (
     <div>
       {loading && <Loader />}
 
       <div className="row justify-content-center mt-5 imgbox1">
         <div className="col-md-5 mt-5">
-          {error && <Error message="Invalid Credentials"></Error>}
+          {error && <Error message={error} />}
+          
           <div>
             <center>
               <h1>Login</h1>
             </center>
             <input
-              type="text"
+              type="email"
               className="form-control"
               placeholder="Email"
               value={email}
-              onChange={(e) => {
-                setemail(e.target.value);
-              }}
+              onChange={(e) => setemail(e.target.value)}
+              onKeyPress={handleKeyPress}
+              autoComplete="email"
             />
             <input
               type="password"
               className="form-control"
               placeholder="Password"
               value={password}
-              onChange={(e) => {
-                setpassword(e.target.value);
-              }}
+              onChange={(e) => setpassword(e.target.value)}
+              onKeyPress={handleKeyPress}
+              autoComplete="current-password"
             />
           </div>
           <center>
