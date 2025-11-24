@@ -5,32 +5,71 @@
 }
 body{
   background-color: #efefef;
-  
+
 }
 .navnav{
-  width: 100vw;
-  background: linear-gradient(to right, #aaeaf4, #66dfee, #80deea);
+  width: 100%;
+  background: linear-gradient(135deg, #9be15d, #87ea32);
   height: 10vh;
+  overflow: visible;
 }
+
 .title{
-  font-size: 30px;
+  font-size: 5vh;
   font-weight: 900;
-  font-family:'Times New Roman', Times, serif;
+  font-family:'Pacifico', cursive;
 }
 .abc{
   color: rgb(0, 0, 0);
   font-size: 20px;
   font-weight: 600;
 }
-.abc:hover{
-  color: black;
-  opacity: 0.8;
-  transform: scale(1.05);
-  transition: 0.3s;
-  border-bottom: 2px solid black;
-  padding-bottom: 0;
-  margin-bottom: 0;
+.login, .register {
+  font-size: 2.5vh;
+  font-weight: 600;
+  padding: 1.2vh 2vw;
+  border-radius: 1.2vh;
+  cursor: pointer;
+  transition: 0.3s ease;
+  background: transparent;
+  border: 0.4vh solid rgba(0,0,0,0.3);
 }
+
+.login:hover, .register:hover {
+  transform: translateY(-0.4vh);
+  border-color: rgba(0,0,0,0.6);
+}
+
+.login {
+  margin: 4% 5% 2% 5%;
+  color: black;
+}
+
+.register {
+  margin: 3% 5% 3% 5%;
+  margin-right: 3vw !important;
+  color: black;
+}
+
+.user-dropdown-btn {
+  font-size: 2.4vh;
+  font-weight: 600;
+  padding: 1.2vh 2vw;
+  border-radius: 1.2vh;
+  background: rgba(0, 0, 0, 0.75);   /* dark but soft */
+  border: 0.2vh solid rgba(255, 255, 255, 0.25);
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+  backdrop-filter: blur(3px);
+}
+
+.user-dropdown-btn:hover {
+  transform: translateY(-0.4vh);
+  background: rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
 
 .l{
   margin-right: 1vw;

@@ -18,7 +18,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary navnav">
+    <nav className="navbar navbar-expand bg-body-tertiary navnav">
       <div className="container-fluid">
         <a className="navbar-brand title" href="/home">
           TravelNest
@@ -29,7 +29,7 @@ const Navbar = () => {
             {user ? (
               <div className="dropdown xx">
                 <button
-                  className="btn btn-dark dropdown-toggle"
+                  className={`user-dropdown-btn dropdown-toggle`}
                   type="button"
                   id="dropdownMenuButton"
                   onClick={toggleDropdown}
@@ -37,6 +37,7 @@ const Navbar = () => {
                 >
                   {user.name}
                 </button>
+
                 <div
                   className={`dropdown-menu${isOpen ? " show" : ""}`}
                   aria-labelledby="dropdownMenuButton"
@@ -51,10 +52,10 @@ const Navbar = () => {
               </div>
             ) : (
               <>
-                <a className="nav-link abc xx" href="/login">
+                <a className="nav-link login" href="/login">
                   Login
                 </a>
-                <a className="nav-link abc xx" href="/register">
+                <a className="nav-link register" href="/register">
                   Register
                 </a>
               </>

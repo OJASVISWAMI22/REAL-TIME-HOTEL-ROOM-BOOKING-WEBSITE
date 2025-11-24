@@ -93,14 +93,14 @@ const Homescreen = () => {
   };
   return (
     <>
-      <div>
+      {/* <div>
         <HiQuestionMarkCircle
           className="question"
           onClick={() => {
             window.location.href = "/help";
           }}
         />
-      </div>
+      </div> */}
       <div className="container">
         <div className="row mt-3 imgbox ">
           <div className="col-md-4">
