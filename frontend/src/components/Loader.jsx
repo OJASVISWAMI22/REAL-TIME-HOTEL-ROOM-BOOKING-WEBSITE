@@ -1,15 +1,8 @@
-import { useState } from "react";
-import ScaleLoader from "react-spinners/ScaleLoader";
+import styles from "./Loader.module.css";
 
 const Loader = () => {
-  let [loading, setLoading] = useState(true);
-
   return (
-    <div style={{ marginTop: "150px", marginLeft: "0vw" }}>
-      <div className="sweet-loading text-center">
-        <ScaleLoader color="#80deea" height={70} speedMultiplier={1.5} />
-      </div>
-    </div>
+    <div className={styles.travel_loader}></div>
   );
 };
 
