@@ -20,7 +20,7 @@ const BookingScreen = () => {
   const { Razorpay } = useRazorpay();
 
   const api = axios.create({
-    baseURL: 'https://real-time-hotel-room-booking-website.onrender.com'
+    baseURL: "https://real-time-hotel-room-booking-website.onrender.com",
   });
 
   useEffect(() => {
@@ -40,7 +40,6 @@ const BookingScreen = () => {
     };
     getRoomById();
   }, [roomid]);
-
 
   useEffect(() => {
     if (room) {
@@ -182,7 +181,7 @@ const BookingScreen = () => {
               </p>
               <p>From Date: {fromdate}</p>
               <p>To Date: {todate}</p>
-              <p>Max Count: {room.maxcount}</p>
+              <p>Max. Person: {room.maxcount}</p>
             </b>
           </div>
           <div style={{ textAlign: "right" }}>
