@@ -55,7 +55,7 @@ const Login = () => {
 
       <div className={styles.container}>
         <div className={styles.left}>
-          <img src="../../public/register.png" alt="Login Visual" />
+          <img src="/register.png" alt="Login Visual" />
         </div>
 
         <div className={styles.right}>

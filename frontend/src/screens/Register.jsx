@@ -65,7 +65,7 @@ const Register = () => {
       <div className={styles.container}>
         <div className={styles.leftPanel}>
           <img
-            src="../../public/register.png"
+            src="/register.png"
             className={styles.illustration}
             alt="side"
           />
