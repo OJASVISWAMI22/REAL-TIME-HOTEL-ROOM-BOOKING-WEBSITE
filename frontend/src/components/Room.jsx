@@ -7,29 +7,30 @@ const Room = ({ room, fromdate, todate }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
-    <div className="row imgbox qs">
-      <div className="col-md-3 ">
-        <img src={room.imageurls[0]} className="smallimg" />
-      </div>
-      <div className="col-md-7 text-left content">
-        <h4>{room.name}</h4>
-        <b>
-          <p>Capacity : {room.maxcount}</p>
-          <p>Contact Us :{room.phoneno}</p>
-          <p>Rent Per Day :{room.rentperday}</p>
-        </b>
-        <div style={{ float: "right" }}>
+    <div className="room-card">
+      <img src={room.imageurls[0]} className="room-card-img" />
+
+      <div className="room-card-body">
+        <h4 className="room-card-title">{room.name}</h4>
+
+        <p>
+          <b>Capacity:</b> {room.maxcount}
+        </p>
+        <p>
+          <b>Price:</b> ₹{room.rentperday}
+        </p>
+
+        <div className="room-card-buttons">
           {fromdate && todate && (
             <Link to={`/book/${room._id}/${fromdate}/${todate}`}>
-              <Button className="btn btn-dark btn">Book Now</Button>
+              <Button className="btn btn-dark">Book Now</Button>
             </Link>
           )}
-          <button className="btn btn-dark btn" onClick={handleShow}>
-            View Images
+          <button className="btn btn-dark" onClick={handleShow}>
+            More
           </button>
         </div>
       </div>
-
       <Modal className="aww" show={show} onHide={handleClose} size="xl">
         <Modal.Header closeButton>
           <Modal.Title>{room.name}</Modal.Title>
@@ -53,7 +54,7 @@ const Room = ({ room, fromdate, todate }) => {
                 <b>Capacity:</b> {room.maxcount} people
               </p>
               <p>
-                <b>Room Type:</b> {room.type}
+                <b>Contact:</b> {room.phoneno}
               </p>
             </div>
           </b>

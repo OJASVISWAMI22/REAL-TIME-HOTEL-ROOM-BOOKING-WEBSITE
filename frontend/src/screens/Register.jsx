@@ -12,8 +12,8 @@ const Register = () => {
   const [cp, setcp] = useState("");
 
   const [loading, setloading] = useState(false);
-  const [error, seterror] = useState("");  
-  const [success, setsuccess] = useState("");  
+  const [error, seterror] = useState("");
+  const [success, setsuccess] = useState("");
 
   const register = async () => {
     seterror("");
@@ -63,10 +63,9 @@ const Register = () => {
       {loading && <Loader />}
 
       <div className={styles.container}>
-
         <div className={styles.leftPanel}>
           <img
-            src="../../public/register.png"  
+            src="../../public/register.png"
             className={styles.illustration}
             alt="side"
           />

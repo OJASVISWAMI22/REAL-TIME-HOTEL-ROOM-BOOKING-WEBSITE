@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import Error from "../components/Error.jsx";
 import Loader from "../components/Loader.jsx";
-import styles from "./Login.module.css";   
+import styles from "./Login.module.css";
 
 const api = axios.create({
   baseURL: "https://real-time-hotel-room-booking-website.onrender.com",
@@ -38,8 +38,7 @@ const Login = () => {
     } catch (error) {
       setloading(false);
       const errorMessage =
-        error.response?.data?.message ||
-        "Login failed. Please try again.";
+        error.response?.data?.message || "Login failed. Please try again.";
       seterror(errorMessage);
     }
   };
@@ -55,7 +54,6 @@ const Login = () => {
       {loading && <Loader />}
 
       <div className={styles.container}>
-        
         <div className={styles.left}>
           <img src="../../public/register.png" alt="Login Visual" />
         </div>
@@ -89,10 +87,11 @@ const Login = () => {
 
           <p className={styles.bottomText}>
             Dont have an account?{" "}
-            <a href="/register" className={styles.link}>Register</a>
+            <a href="/register" className={styles.link}>
+              Register
+            </a>
           </p>
         </div>
-
       </div>
     </div>
   );

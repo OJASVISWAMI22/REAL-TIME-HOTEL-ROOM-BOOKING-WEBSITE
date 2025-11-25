@@ -165,13 +165,13 @@ const Homescreen = () => {
             </select>
           </div>
         </div>
-        <div className="row justify-content-center mt-3">
+        <div className="room-grid   mt-4">
           {loading ? (
             <Loader />
           ) : (
             rooms.map((room) => {
               return (
-                <div className="col-md-8 mt-4" key={room._id}>
+                <div className="room-card-container" key={room._id}>
                   <Room room={room} fromdate={fromdate} todate={todate} />
                 </div>
               );
