@@ -2,8 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import Error from "../components/Error.jsx";
 import Loader from "../components/Loader.jsx";
+import styles from "./Login.module.css";   
+
 const api = axios.create({
-  baseURL: 'https://real-time-hotel-room-booking-website.onrender.com'
+  baseURL: "https://real-time-hotel-room-booking-website.onrender.com",
 });
 
 const Login = () => {
@@ -11,7 +13,7 @@ const Login = () => {
   const [password, setpassword] = useState("");
 
   const [loading, setloading] = useState(false);
-  const [error, seterror] = useState("");  
+  const [error, seterror] = useState("");
 
   const login = async () => {
     seterror("");
@@ -30,16 +32,14 @@ const Login = () => {
       setloading(true);
       const result = (await api.post("/api/user/login", user)).data;
       setloading(false);
-      
+
       localStorage.setItem("currentUser", JSON.stringify(result));
-      
       window.location.href = "/home";
-      
     } catch (error) {
       setloading(false);
-      
-      const errorMessage = error.response?.data?.message || 
-                          "Login failed. Please try again.";
+      const errorMessage =
+        error.response?.data?.message ||
+        "Login failed. Please try again.";
       seterror(errorMessage);
     }
   };
@@ -51,42 +51,48 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className={styles.page}>
       {loading && <Loader />}
 
-      <div className="row justify-content-center mt-5 imgbox1">
-        <div className="col-md-5 mt-5">
-          {error && <Error message={error} />}
-          
-          <div>
-            <center>
-              <h1>Login</h1>
-            </center>
-            <input
-              type="email"
-              className="form-control"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setemail(e.target.value)}
-              onKeyPress={handleKeyPress}
-              autoComplete="email"
-            />
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setpassword(e.target.value)}
-              onKeyPress={handleKeyPress}
-              autoComplete="current-password"
-            />
-          </div>
-          <center>
-            <button className="btn btn-primary mt-4" onClick={login}>
-              Login
-            </button>
-          </center>
+      <div className={styles.container}>
+        
+        <div className={styles.left}>
+          <img src="../../public/register.png" alt="Login Visual" />
         </div>
+
+        <div className={styles.right}>
+          <h2 className={styles.title}>Welcome Back</h2>
+
+          {error && <Error message={error} />}
+
+          <input
+            type="email"
+            className={styles.input}
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setemail(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+
+          <input
+            type="password"
+            className={styles.input}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setpassword(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+
+          <button className={styles.button} onClick={login}>
+            Login
+          </button>
+
+          <p className={styles.bottomText}>
+            Dont have an account?{" "}
+            <a href="/register" className={styles.link}>Register</a>
+          </p>
+        </div>
+
       </div>
     </div>
   );
