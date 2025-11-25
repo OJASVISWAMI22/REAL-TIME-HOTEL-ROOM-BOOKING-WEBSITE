@@ -5,14 +5,12 @@ import axios from "axios";
 import Room from "../components/Room";
 import Loader from "../components/Loader";
 import moment from "moment";
-import { HiQuestionMarkCircle } from "react-icons/hi2";
 
 const { RangePicker } = DatePicker;
 
 const api = axios.create({
-  baseURL: 'https://real-time-hotel-room-booking-website.onrender.com'
+  baseURL: "https://real-time-hotel-room-booking-website.onrender.com",
 });
-
 
 const Homescreen = () => {
   const [rooms, setrooms] = useState([]);
@@ -23,6 +21,8 @@ const Homescreen = () => {
   const [duplicateroom, setduplicateroom] = useState([]);
   const [searchkey, setsearchkey] = useState("");
   const [type, settype] = useState("All");
+  const [sort, setSort] = useState("");
+
   useEffect(() => {
     const getroom = async () => {
       try {
@@ -39,6 +39,20 @@ const Homescreen = () => {
     };
     getroom();
   }, []);
+
+  const handleSort = (value) => {
+    setSort(value);
+
+    let sorted = [...rooms];
+
+    if (value === "lowtohigh") {
+      sorted.sort((a, b) => a.rentperday - b.rentperday);
+    } else if (value === "hightolow") {
+      sorted.sort((a, b) => b.rentperday - a.rentperday);
+    }
+
+    setrooms(sorted);
+  };
 
   const filterbydate = (dates, dateStrings) => {
     setfromdate(dates[0].format("DD-MM-YYYY"));
@@ -76,12 +90,14 @@ const Homescreen = () => {
     }
     setrooms(temproom);
   };
+
   const filterbysearch = () => {
-    const temprooms = duplicateroom.filter((room) =>
-      room.name.toLowerCase().includes(searchkey.toLowerCase())
+    const temprooms = duplicateroom.filter(
+      (room) => Number(room.maxcount) >= Number(searchkey)
     );
     setrooms(temprooms);
   };
+
   const filterbytype = (e) => {
     settype(e);
     if (e !== "All") {
@@ -102,7 +118,7 @@ const Homescreen = () => {
         />
       </div> */}
       <div className="container">
-        <div className="row mt-3 imgbox ">
+        <div className="row mt-2 imgbox ">
           <div className="col-md-4">
             <RangePicker
               className="won"
@@ -113,11 +129,11 @@ const Homescreen = () => {
               }}
             />
           </div>
-          <div className="col-md-3">
+          <div className="col-md-2 capacity-select">
             <input
               type="text"
               className="form-control"
-              placeholder="Search Rooms"
+              placeholder="Capacity"
               value={searchkey}
               onChange={(e) => {
                 setsearchkey(e.target.value);
@@ -125,18 +141,27 @@ const Homescreen = () => {
               onKeyUp={filterbysearch}
             />
           </div>
-          <div className="col-md-4">
+          <div className="col-md-2">
             <select
-              className="form-control"
+              className="form-select custom-select"
               value={type}
-              onChange={(e) => {
-                filterbytype(e.target.value);
-              }}
+              onChange={(e) => filterbytype(e.target.value)}
             >
               <option value="All">All</option>
               <option value="Deluxe">Deluxe</option>
               <option value="Standard">Standard</option>
               <option value="Suite">Suite</option>
+            </select>
+          </div>
+          <div className="col-md-3">
+            <select
+              className="form-select sort-select"
+              value={sort}
+              onChange={(e) => handleSort(e.target.value)}
+            >
+              <option value="">Sort By Price</option>
+              <option value="lowtohigh">Low to High</option>
+              <option value="hightolow">High to Low</option>
             </select>
           </div>
         </div>
