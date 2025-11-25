@@ -25,12 +25,12 @@ const Room = ({ room, fromdate, todate }) => {
             </Link>
           )}
           <button className="btn btn-dark btn" onClick={handleShow}>
-            About
+            View Images
           </button>
         </div>
       </div>
 
-      <Modal  className="aww" show={show} onHide={handleClose} size="lg">
+      <Modal className="aww" show={show} onHide={handleClose} size="xl">
         <Modal.Header closeButton>
           <Modal.Title>{room.name}</Modal.Title>
         </Modal.Header>
@@ -44,7 +44,19 @@ const Room = ({ room, fromdate, todate }) => {
               );
             })}
           </Carousel>
-          <b>{room.description}</b>
+          <b>
+            <div className="room-info">
+              <p>
+                <b>Rating:</b> {room.rating || "5 ★"}
+              </p>
+              <p>
+                <b>Capacity:</b> {room.maxcount} people
+              </p>
+              <p>
+                <b>Room Type:</b> {room.type}
+              </p>
+            </div>
+          </b>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
