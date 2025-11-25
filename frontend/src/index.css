@@ -6,7 +6,7 @@
 }
 
 body {
-  background-color: #efefef;
+  background-color: #f8f9fa;
 }
 
 .navnav {
@@ -585,4 +585,93 @@ b {
   .right {
     margin-top: 30px;
   }
+}
+/* ------------------ PROFILE SECTION ------------------ */
+.wer {
+  background: #f3f7ef;
+  padding: 28px 32px;
+  border-radius: 16px;
+  margin-top: 20px;
+  border: 1px solid #e9e9e9;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+}
+
+.wer h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: #222;
+}
+
+.wer h2 {
+  font-size: 18px;
+  color: #444;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.wer hr {
+  margin: 12px 0 20px;
+}
+
+.bbb {
+  background: #f6f6f4;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin: 16px auto;
+  width: 100%;
+  max-width: 520px;
+  border: 1px solid #e6e6e6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: 0.2s ease-in-out;
+}
+
+.bbb:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.bbb h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+.bbb hr {
+  margin: 8px 0 12px;
+  border-color: #eee;
+}
+
+.bbb p {
+  margin: 4px 0;
+  font-size: 15px;
+  color: #444;
+  line-height: 1.35;
+}
+
+.bbb b {
+  font-weight: 600;
+}
+
+.bbb .btn-danger {
+  width: 30%;
+  margin-top: 12px;
+  margin-left: 70%;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.bbb .ant-tag {
+  padding: 3px 8px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+.booking-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  padding: 10px 0;
 }

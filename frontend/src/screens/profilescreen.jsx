@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
 import Swal from "sweetalert2";
 const api = axios.create({
-  baseURL: 'https://real-time-hotel-room-booking-website.onrender.com'
+  baseURL: "https://real-time-hotel-room-booking-website.onrender.com",
 });
 
 const Profilescreen = () => {
@@ -44,7 +44,7 @@ const Profilescreen = () => {
       key: "2",
       label: "Profile",
       children: (
-        <div className="imgbox wer">
+        <div className=" wer">
           <h1>My Profile</h1>
           <hr />
           <h2>Name : {user?.name}</h2>
@@ -101,49 +101,47 @@ const Mybooking = ({ onCancelBooking }) => {
   }, []);
 
   return (
-    <div className="row mb-5 wer">
-      <div className="col-md-12">
-        {loading && <Loader />}
-        {bookings &&
-          bookings.map((booking) => (
-            <div className="imgbox ppp" key={booking._id}>
-              <h3>{booking.room}</h3>
-              <hr />
-              <p>
-                <b>Booking Id : </b>
-                {booking._id}
-              </p>
-              <p>
-                <b>Check In : </b>
-                {booking.fromdate}
-              </p>
-              <p>
-                <b>Check Out : </b>
-                {booking.todate}
-              </p>
-              <p>
-                <b>Amount : </b>
-                {booking.totalamount}
-              </p>
-              <p>
-                <b>Status : </b>
-                {booking.status === "booked" ? (
-                  <Tag color="green">Confirmed</Tag>
-                ) : (
-                  <Tag color="red">Cancelled</Tag>
-                )}
-              </p>
-              {booking.status == "booked" && (
-                <button
-                  className="btn btn-danger w"
-                  onClick={() => onCancelBooking(booking._id, booking.roomid)}
-                >
-                  Cancel Booking
-                </button>
+    <div className="booking-grid">
+      {loading && <Loader />}
+      {bookings &&
+        bookings.map((booking) => (
+          <div className=" bbb ppp" key={booking._id}>
+            <h3>{booking.room}</h3>
+            <hr />
+            <p>
+              <b>Booking Id : </b>
+              {booking._id}
+            </p>
+            <p>
+              <b>Check In : </b>
+              {booking.fromdate}
+            </p>
+            <p>
+              <b>Check Out : </b>
+              {booking.todate}
+            </p>
+            <p>
+              <b>Amount : </b>
+              {booking.totalamount}
+            </p>
+            <p>
+              <b>Status : </b>
+              {booking.status === "booked" ? (
+                <Tag color="green">Confirmed</Tag>
+              ) : (
+                <Tag color="red">Cancelled</Tag>
               )}
-            </div>
-          ))}
-      </div>
+            </p>
+            {booking.status == "booked" && (
+              <button
+                className="btn btn-danger w"
+                onClick={() => onCancelBooking(booking._id, booking.roomid)}
+              >
+                Cancel Booking
+              </button>
+            )}
+          </div>
+        ))}
     </div>
   );
 };
